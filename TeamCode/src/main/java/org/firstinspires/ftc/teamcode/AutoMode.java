@@ -7,6 +7,10 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
 // Non-RR imports
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -171,6 +175,34 @@ public class AutoMode extends LinearOpMode {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        Arm arm = new Arm(hardwareMap);
+        Wrist wrist = new Wrist(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
+        LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
+        LinearSlideRight linearSlideRight = new LinearSlideRight(hardwareMap);
+
+
+        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(new Vector2d(48, -40), Math.toRadians(90))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(58, -40), Math.toRadians(90))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(72, -40), Math.toRadians(90))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(66, -66), Math.toRadians(90));
+
+
+
+
+
+
+
 
     }
     }
