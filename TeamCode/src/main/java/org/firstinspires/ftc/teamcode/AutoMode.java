@@ -8,9 +8,11 @@ import com.acmerobotics.roadrunner.Action;
 
 // Non-RR imports
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -196,7 +198,15 @@ public class AutoMode extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(72, -40), Math.toRadians(90))
                 .waitSeconds(2)
                 .strafeToLinearHeading(new Vector2d(66, -66), Math.toRadians(90));
-        tab1.build();
+        waitForStart();
+
+        if(isStopRequested()) return;
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        tab1.build()
+                )
+        );
 
 
 
