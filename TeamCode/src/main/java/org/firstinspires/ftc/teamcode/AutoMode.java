@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
 
 // RR-specific imports
@@ -28,14 +26,63 @@ public class AutoMode extends LinearOpMode {
         public Arm(HardwareMap hardwareMap) {
             Arm = hardwareMap.get(DcMotorEx.class, "armMotor");
             Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            Arm.setDirection(DcMotorSimple.Direction.FORWARD);
+            Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        public class ArmCollect implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                Arm.setTargetPosition(0);
+                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                return false;
+            }
+        }
+        public class ArmIntoBasket implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                Arm.setTargetPosition(1);
+                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                return false;
+            }
+        }
+        public class ArmReset implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                Arm.setTargetPosition(2);
+                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                return false;
+            }
         }
     }
-    public class Intake{
+    public class Intake {
         private CRServo Intake;
 
         public Intake(HardwareMap hardwareMap) {
             Intake = hardwareMap.get(CRServo.class, "Intake");
+        }
+
+        public class IntakeCollect implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                Intake.setPower(-3);
+                return false;
+            }
+        }
+
+        public class IntakeDispose implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                Intake.setPower(0.5);
+                return false;
+            }
+        }
+
+        public class IntakeReset implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                Intake.setPower(0.5);
+                return false;
+            }
         }
     }
     public class Wrist{
@@ -43,6 +90,20 @@ public class AutoMode extends LinearOpMode {
 
         public Wrist(HardwareMap hardwareMap) {
             Wrist = hardwareMap.get(Servo.class, "Servo");
+        }
+        public class WristOut implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                Wrist.setPosition(0.945);
+                return false;
+            }
+        }
+        public class WristSpecimen implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                Wrist.setPosition(0.65);
+                return false;
+            }
         }
     }
     public class LinearSlideLeft{
@@ -112,4 +173,4 @@ public class AutoMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
     }
-}
+    }
