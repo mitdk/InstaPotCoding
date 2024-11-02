@@ -21,7 +21,9 @@ public class MeepMeepTest {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(90, 60, Math.toRadians(180), Math.toRadians(180), 15)
 
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(10, -66, 0))
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(10, -66, 0))
+
                         //Moves towards submersible for initial specimen drop
                         .lineToLinearHeading(new Pose2d(3.7, -31.3, Math.toRadians(180)))
                         //Turns wrist servo 45 degrees, between the normal and specimen positions

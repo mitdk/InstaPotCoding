@@ -10,7 +10,11 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -186,7 +190,6 @@ public class AutoMode extends LinearOpMode {
         //LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
         //LinearSlideRight linearSlideRight = new LinearSlideRight(hardwareMap);
 
-
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(3.7, -31.2), Math.toRadians(180))
                 .waitSeconds(0.7)
@@ -196,8 +199,8 @@ public class AutoMode extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(36.7, -25.8, Math.toRadians(0)), Math.toRadians(90))
                 .waitSeconds(2)
                 .strafeToConstantHeading(new Vector2d(36.7, -40))
-                .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
-                        .build());
+                .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180));
+
 
 
                 /*.strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
