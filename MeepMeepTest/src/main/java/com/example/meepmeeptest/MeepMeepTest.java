@@ -1,5 +1,6 @@
 package com.example.meepmeeptest;
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -23,19 +24,17 @@ public class MeepMeepTest {
 
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(10, -66, 0))
 
-                        .lineToLinearHeading(new Pose2d(48, -40, Math.toRadians(90)))
+                        .strafeToLinearHeading(new Vector2d(48, -40), Math.toRadians(90))
                         .waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)))
+                        .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
                         .waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(58, -40, Math.toRadians(90)))
+                        .strafeToLinearHeading(new Vector2d(58, -40), Math.toRadians(90))
                         .waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)))
+                        .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
                         .waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(72, -40, Math.toRadians(90)))
+                        .strafeToLinearHeading(new Vector2d(72, -40), Math.toRadians(90))
                         .waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(66,-66, Math.toRadians(90)))
-
-                        .build());
+                        .strafeToLinearHeading(new Vector2d(66, -66), Math.toRadians(90));
 
 
 
