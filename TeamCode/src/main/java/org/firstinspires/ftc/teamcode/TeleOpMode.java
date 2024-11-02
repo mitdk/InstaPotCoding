@@ -87,6 +87,7 @@ public class TeleOpMode extends LinearOpMode {
         arm.setPower(power);
         telemetry.addData ("pos", armPos);
         telemetry.addData ("target", target);
+        telemetry.update();
 
         telemetry.addLine("Robot Ready.");
         telemetry.update();
