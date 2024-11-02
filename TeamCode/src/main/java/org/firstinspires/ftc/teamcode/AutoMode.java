@@ -34,20 +34,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+import java.lang.Math;
+
 @Autonomous(name = "AutoMode")
 
 public class AutoMode extends LinearOpMode {
-    public class Drivetrain{
-        public void MecanumDrive(HardwareMap hardwareMap) {
-
-        }
-    }
-
-
-
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+    Pose2d initialPose = new Pose2d(10, -66, Math.toRadians(90));
+    MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
     }
 }
