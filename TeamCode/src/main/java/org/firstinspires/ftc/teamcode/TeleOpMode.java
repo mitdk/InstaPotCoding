@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,6 +17,7 @@ import com.arcrobotics.ftclib.controller.PController;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp
+@Config
 public class TeleOpMode extends LinearOpMode {
     private PIDController controller;
     public static double p = 0, i = 0, d = 0;
@@ -79,15 +81,6 @@ public class TeleOpMode extends LinearOpMode {
         linSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setPower(INTAKE_OFF);
         wrist.setPosition(WRIST_FOLDED_IN);
-        controller.setPID(p, i, d);
-        int armPos = arm.getCurrentPosition();
-        double pid = controller.calculate(armPos, target);
-        double ff = Math.cos (Math.toRadians(target/tick_in_degree)) * f;
-        double power = pid + ff;
-        arm.setPower(power);
-        telemetry.addData ("pos", armPos);
-        telemetry.addData ("target", target);
-        telemetry.update();
 
         telemetry.addLine("Robot Ready.");
         telemetry.update();
@@ -139,11 +132,14 @@ public class TeleOpMode extends LinearOpMode {
 
             if (gamepad2.dpad_up){
                 armPosition = ARM_COLLECT;
+                arm.setPower(1);
 
             } else if (gamepad2.dpad_down){
                 armPosition = ARM_DROP;
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             } else if (gamepad2.dpad_left){
                 armPosition = ARM_COLLAPSED_INTO_ROBOT;
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             arm.setTargetPosition((int) armPosition);
             ((DcMotorEx) arm).setVelocity(200);
