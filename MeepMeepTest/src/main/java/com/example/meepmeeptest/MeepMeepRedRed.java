@@ -10,7 +10,7 @@ import org.rowlandhall.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder;
 import org.rowlandhall.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class MeepMeepTest {
+public class MeepMeepRedRed {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800)
                 .setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
@@ -50,7 +50,7 @@ public class MeepMeepTest {
                                 //Comes to observation zone for reentry
                                 .lineToLinearHeading(new Pose2d(58, -61, Math.toRadians(180)))
 
-                        .build());
+                                .build());
 
 
 
