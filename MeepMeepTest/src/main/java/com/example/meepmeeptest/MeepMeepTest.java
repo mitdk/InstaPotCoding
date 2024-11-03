@@ -41,8 +41,29 @@ public class MeepMeepTest {
                         //Travel to basket
                         .lineToConstantHeading(new Vector2d(36.7, -40))
                         .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
-                        /*.waitSeconds(2)
-                        .lineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)))
+                        //Deposits sample block
+                        .waitSeconds(2)
+                        //goes to 2nd sample
+                        .splineToLinearHeading(new Pose2d(46.7, -25.8, Math.toRadians(0)), Math.toRadians(90))
+                        //Intakes 2nd sample block
+                        .waitSeconds(2)
+                        //Travel to basket
+                        .lineToConstantHeading(new Vector2d(36.7, -40))
+                        .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
+                        //Deposits 3rd sample block
+                        .waitSeconds(2)
+                        //goes to 3rd sample
+                        .splineToLinearHeading(new Pose2d(56.7, -25.8, Math.toRadians(0)), Math.toRadians(90))
+                        //Intakes 3rd sample block
+                        .waitSeconds(2)
+                        //Travel to basket
+                        .lineToConstantHeading(new Vector2d(36.7, -40))
+                        .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
+                                //Deposits 3rd sample block
+                        .waitSeconds(2)
+
+
+                      /*  .lineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)))
                         .waitSeconds(2)
                         .lineToLinearHeading(new Pose2d(72, -40, Math.toRadians(90)))
                         .waitSeconds(2)
