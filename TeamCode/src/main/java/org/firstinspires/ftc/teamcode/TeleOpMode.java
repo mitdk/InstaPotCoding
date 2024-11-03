@@ -62,8 +62,9 @@ public class TeleOpMode extends LinearOpMode {
 
 
         arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -99,7 +100,7 @@ public class TeleOpMode extends LinearOpMode {
             linSlideRight.setPower(extend);
 
             if (gamepad2.a) {
-                intake.setPower(INTAKE_COLLECT);
+                intake.setPower(1);
             } else if (gamepad2.x) {
                 intake.setPower(0);
             } else if (gamepad2.b) {
