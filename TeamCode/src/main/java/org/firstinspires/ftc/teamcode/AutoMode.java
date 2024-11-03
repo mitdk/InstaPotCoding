@@ -26,20 +26,21 @@ import com.qualcomm.robotcore.hardware.CRServo;
 @Autonomous(name = "AutoMode")
 
 public class AutoMode extends LinearOpMode {
-    /*public class Arm {
+    public class Arm {
         private DcMotorEx Arm;
 
         public Arm(HardwareMap hardwareMap) {
             Arm = hardwareMap.get(DcMotorEx.class, "armMotor");
             Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Arm.setTargetPosition(0);
+            Arm.setVelocity(2100);
             Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         public class ArmCollect implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm.setTargetPosition(0);
+                Arm.setTargetPosition(100);
                 Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 return false;
             }
@@ -47,7 +48,7 @@ public class AutoMode extends LinearOpMode {
         public class ArmIntoBasket implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm.setTargetPosition(1);
+                Arm.setTargetPosition(-3400);
                 Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 return false;
             }
@@ -55,7 +56,7 @@ public class AutoMode extends LinearOpMode {
         public class ArmReset implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm.setTargetPosition(2);
+                Arm.setTargetPosition(0);
                 Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 return false;
             }
@@ -79,7 +80,7 @@ public class AutoMode extends LinearOpMode {
         public class IntakeDispose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(0.5);
+                Intake.setPower(3);
                 return false;
             }
         }
@@ -87,7 +88,7 @@ public class AutoMode extends LinearOpMode {
         public class IntakeReset implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(0.5);
+                Intake.setPower(0);
                 return false;
             }
         }
@@ -175,7 +176,7 @@ public class AutoMode extends LinearOpMode {
         public Action LinSlideRightUp() {
             return new LinSlideRightUp();
         }
-    }*/
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
