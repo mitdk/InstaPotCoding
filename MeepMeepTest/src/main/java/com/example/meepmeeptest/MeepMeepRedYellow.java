@@ -22,7 +22,7 @@ public class MeepMeepRedYellow {
                 .setConstraints(50, 50, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(10, -60, 0))
+                        drive.trajectorySequenceBuilder(new Pose2d(10, -60, Math.toRadians(90)))
                                 //RED SIDE RED SAMPLE
                                 //Brings the robot to the basket for first sample
                                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
@@ -46,18 +46,25 @@ public class MeepMeepRedYellow {
                                 //Deposits 3rd sample block
                                 .waitSeconds(1)
                                 //Goes to submersible to pick up 4th sample
-                                .lineToLinearHeading(new Pose2d(-56.4,-18.4,Math.toRadians(0)))
-                                .splineToLinearHeading(new Pose2d(-25.8, -6.8, 0), Math.toRadians(-90))
+                                /*.lineToLinearHeading(new Pose2d(56.4,18.4,Math.toRadians(180)))
+                                .splineToLinearHeading(new Pose2d(25.8, 6.8, 0), Math.toRadians(-270))
                                 //Intakes 4th sample block
                                 .waitSeconds(1)
                                 //Travel to basket
-                                .lineToLinearHeading(new Pose2d(-56.4, -18.4, 0))
-                                .lineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)))
+                                .lineToLinearHeading(new Pose2d(56.4, 18.4, 180))
+                                .lineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)))
                                 //Deposits 4th sample block
+                                .waitSeconds(1)*/
+                                //Goes to 4th sample block, alliance specific on other side
+                                .splineToLinearHeading(new Pose2d(36.7,-25.8, Math.toRadians(0)), Math.toRadians(90))
+                                //Intakes
                                 .waitSeconds(1)
-                                /*Comes to Ascent Zone for reentry
-                                .lineToLinearHeading(new Pose2d(-56.4,-18.4,Math.toRadians(0)))
-                                .splineToLinearHeading(new Pose2d(-23.8, -6.8, 0), Math.toRadians(-90))*/
+                                //Travel to basket
+                                .splineToLinearHeading(new Pose2d(-55,-55,Math.toRadians(45)), Math.toRadians(180))
+                                //Deposits 4th sample
+                                .waitSeconds(1)
+                                //Comes to Observation Zone for reentry
+                                .lineToLinearHeading(new Pose2d(58,-61,Math.toRadians(90)))
 
                                 .build());
 

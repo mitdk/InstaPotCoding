@@ -22,7 +22,7 @@ public class MeepMeepBlueYellow {
                 .setConstraints(50, 50, Math.toRadians(180), Math.toRadians(180), 15)
 
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-10, 60, 0))
+                        drive.trajectorySequenceBuilder(new Pose2d(-10, 60, Math.toRadians(-90)))
                                 //RED SIDE RED SAMPLE
                                 //Brings the robot to the basket for first sample
                                 .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)), Math.toRadians(0))
@@ -56,11 +56,13 @@ public class MeepMeepBlueYellow {
                                 //Deposits 4th sample block
                                 .waitSeconds(1)*/
                                 //Goes to 4th sample block, alliance specific on other side
-                                .splineToLinearHeading(new Pose2d(-36.7,25.8,Math.toRadians(180)), Math.toRadians(270))
+                                .splineToLinearHeading(new Pose2d(-36.7,25.8, Math.toRadians(180)), Math.toRadians(-90))
                                 //Intakes
                                 .waitSeconds(1)
                                 //Travel to basket
-
+                                .splineToLinearHeading(new Pose2d(55,55,Math.toRadians(225)), Math.toRadians(0))
+                                //Deposits 4th sample
+                                .waitSeconds(1)
                                 //Comes to Observation Zone for reentry
                                 .lineToLinearHeading(new Pose2d(-58,61,Math.toRadians(-90)))
 
