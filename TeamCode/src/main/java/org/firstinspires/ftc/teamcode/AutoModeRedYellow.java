@@ -206,9 +206,8 @@ public class AutoModeRedYellow extends LinearOpMode {
 
 
         TrajectoryActionBuilder RedYellow = drive.actionBuilder(initialPose)
-                ///RED SIDE RED SAMPLE
-        //Brings the robot to the basket for first sample
-
+                ///RED SIDE YELLOW SAMPLE
+                //Brings the robot to the basket for first sample
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
                 .waitSeconds(1)
                 //Brings robot to second sample block, the middle one of the 3 outside the sub
@@ -229,16 +228,6 @@ public class AutoModeRedYellow extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
                 //Deposits 3rd sample block
                 .waitSeconds(1)
-                //Goes to submersible to pick up 4th sample
-                /*.lineToLinearHeading(new Pose2d(56.4,18.4,Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(25.8, 6.8, 0), Math.toRadians(-270))
-                //Intakes 4th sample block
-                .waitSeconds(1)
-                //Travel to basket
-                .lineToLinearHeading(new Pose2d(56.4, 18.4, 180))
-                .lineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)))
-                //Deposits 4th sample block
-                .waitSeconds(1)*/
                 //Goes to 4th sample block, alliance specific on other side
                 .splineToLinearHeading(new Pose2d(36.7,-25.8, Math.toRadians(0)), Math.toRadians(90))
                 //Intakes

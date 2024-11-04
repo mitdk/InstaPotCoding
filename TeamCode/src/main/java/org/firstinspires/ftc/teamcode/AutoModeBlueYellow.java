@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import androidx.annotation.NonNull;
 
 // RR-specific imports
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
@@ -22,10 +23,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-import org.jetbrains.annotations.NotNull;
-
-
-@Autonomous(name = "AutoMode")
+@Config
+@Autonomous(name = "AutoModeBlueBlue")
 
 public class AutoModeBlueYellow extends LinearOpMode {
     public class Arm {
@@ -203,16 +202,13 @@ public class AutoModeBlueYellow extends LinearOpMode {
         Outtake outtake = new Outtake(hardwareMap);
         Intake intake = new Intake(hardwareMap);
         LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
-
-
         TrajectoryActionBuilder BlueYellow = drive.actionBuilder(initialPose)
-                ///RED SIDE RED SAMPLE
+                //BLUE SIDE YELLOW SAMPLE
                 //Brings the robot to the basket for first sample
                 .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)), Math.toRadians(0))
                 .waitSeconds(1)
                 //Brings robot to second sample block, the middle one of the 3 outside the sub
                 .strafeToLinearHeading(new Vector2d(36.7, 25.8), Math.toRadians(0))
-
                 //Intakes 2nd sample block
                 .waitSeconds(1)
                 //Travel to basket
@@ -221,25 +217,14 @@ public class AutoModeBlueYellow extends LinearOpMode {
                 .waitSeconds(1)
                 //goes to 3rd sample
                 .strafeToLinearHeading(new Vector2d(36.7, 25.8), Math.toRadians(0))
-                .lineToY(10)
-
+                .lineToYConstantHeading(10)
                 //Intakes 3rd sample block
                 .waitSeconds(1)
                 //Travel to basket
-                .lineToY(-10)
+                .lineToYConstantHeading(-10)
                 .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
                 //Deposits 3rd sample block
                 .waitSeconds(1)
-                //Goes to submersible to pick up 4th sample
-                /*.lineToLinearHeading(new Pose2d(56.4,18.4,Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(25.8, 6.8, 0), Math.toRadians(-270))
-                //Intakes 4th sample block
-                .waitSeconds(1)
-                //Travel to basket
-                .lineToLinearHeading(new Pose2d(56.4, 18.4, 180))
-                .lineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)))
-                //Deposits 4th sample block
-                .waitSeconds(1)*/
                 //Goes to 4th sample block, alliance specific on other side
                 .splineToLinearHeading(new Pose2d(-36.7,25.8, Math.toRadians(180)), Math.toRadians(-90))
                 //Intakes
@@ -249,7 +234,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
                 //Deposits 4th sample
                 .waitSeconds(1)
                 //Comes to Observation Zone for reentry
-                .strafeToLinearHeading(new Vector2d(-58,61),Math.toRadians(-90));
+                .strafeToLinearHeading(new Vector2d(-58, 61), Math.toRadians(-90));
 
 
         waitForStart();

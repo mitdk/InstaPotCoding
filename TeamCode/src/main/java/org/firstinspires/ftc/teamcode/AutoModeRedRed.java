@@ -206,7 +206,7 @@ public class AutoModeRedRed extends LinearOpMode {
 
 
         TrajectoryActionBuilder RedRed = drive.actionBuilder(initialPose)
-                //BLUE SIDE BLUE SAMPLE
+                //RED SIDE RED SAMPLE
                 //Brings the robot to the basket for first sample
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
                 .afterTime(1, linearSlideLeft.linSlideLeftUp())
