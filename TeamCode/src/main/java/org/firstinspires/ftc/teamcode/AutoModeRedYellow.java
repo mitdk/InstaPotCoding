@@ -209,33 +209,55 @@ public class AutoModeRedYellow extends LinearOpMode {
                 ///RED SIDE YELLOW SAMPLE
                 //Brings the robot to the basket for first sample
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
-                .waitSeconds(1)
+                .afterTime(0.3, linearSlideLeft.linSlideLeftUp())
+                //Outtake sample into basket
+                .stopAndAdd(outtake.outtakeDispose())
                 //Brings robot to second sample block, the middle one of the 3 outside the sub
                 .strafeToLinearHeading(new Vector2d(-36.7, -25.8), Math.toRadians(180))
                 //Intakes 2nd sample block
-                .waitSeconds(1)
+                .afterTime(4.5, linearSlideLeft.linSlideLeftDown())
+                .afterTime(4.5, outtake.outtakeCollect())
+                .afterTime(4.5, arm.armCollect())
+                //Intakes 2nd sample block
+                .stopAndAdd(intake.intakeCollect())
                 //Travel to basket
                 .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .afterTime(7.3, arm.armIntoBasket())
+                .afterTime(8.7, intake.intakeDispose())
+                .afterTime(9.2, linearSlideLeft.linSlideLeftUp())
                 //Deposits 2nd sample block
-                .waitSeconds(1)
+                .stopAndAdd(outtake.outtakeDispose())
                 //goes to 3rd sample
                 .strafeToLinearHeading(new Vector2d(-36.7, -25.8), Math.toRadians(180))
+                .afterTime(10.5, linearSlideLeft.linSlideLeftDown())
+                .afterTime(10.5, outtake.outtakeCollect())
                 .lineToY(10)
+                .afterTime(12, arm.armCollect())
                 //Intakes 3rd sample block
-                .waitSeconds(1)
+                .stopAndAdd(intake.intakeCollect())
                 //Travel to basket
                 .lineToY(-10)
                 .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                .afterTime(14, arm.armIntoBasket())
+                .afterTime(15, intake.intakeDispose())
+                .afterTime(16, linearSlideLeft.linSlideLeftUp())
                 //Deposits 3rd sample block
-                .waitSeconds(1)
+                .stopAndAdd(outtake.outtakeDispose())
                 //Goes to 4th sample block, alliance specific on other side
                 .splineToLinearHeading(new Pose2d(36.7,-25.8, Math.toRadians(0)), Math.toRadians(90))
+                .afterTime(18.15, linearSlideLeft.linSlideLeftDown())
+                .afterTime(18.15, outtake.outtakeCollect())
+                .afterTime(20.8, arm.armCollect())
                 //Intakes
-                .waitSeconds(1)
+                .stopAndAdd(intake.intakeCollect())
                 //Travel to basket
                 .splineToLinearHeading(new Pose2d(-55,-55,Math.toRadians(45)), Math.toRadians(180))
+                .afterTime(23.5, arm.armIntoBasket())
+                .afterTime(24, intake.intakeDispose())
+                .afterTime(25.4, linearSlideLeft.linSlideLeftUp())
+                .stopAndAdd(outtake.outtakeDispose())
                 //Deposits 4th sample
-                .waitSeconds(1)
+                .stopAndAdd(outtake.outtakeDispose())
                 //Comes to Observation Zone for reentry
                 .strafeToLinearHeading(new Vector2d(58,-61),Math.toRadians(90));
 
