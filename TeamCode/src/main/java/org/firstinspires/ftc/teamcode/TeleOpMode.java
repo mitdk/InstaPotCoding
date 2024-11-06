@@ -29,47 +29,50 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("rightfront");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("leftback");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightback");
-        Servo wrist = hardwareMap.servo.get("wrist");
         CRServo intake = hardwareMap.crservo.get("intake");
+        Servo outtake = hardwareMap.servo.get("outtake");
+        DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
         DcMotor linSlideLeft = hardwareMap.dcMotor.get("linSlideLeft");
-        DcMotor linSlideRight = hardwareMap.dcMotor.get("linSlideRight");
 
         final double ARM_TICKS_PER_DEGREE = 19.7924893140647; //exact fraction is (194481/9826)
         final double LINEAR_SLIDE_TICKS_PER_DEGREE = 19.8616161616;
         final double INTAKE_COLLECT = -1.0;
         final double INTAKE_OFF = 0.0;
         final double INTAKE_DEPOSIT = 1;
+        final double OUTTAKE_COLLECT = 0;
+        final double OUTTAKE_DISPOSE = 1;
         /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
-        final double WRIST_FOLDED_IN = 0.945;
-        final double WRIST_FOLDED_OUT = 0.6;
         final double ARM_COLLAPSED_INTO_ROBOT = 0;
         final double ARM_COLLECT = -3000;
         final double ARM_DROP = -10;
+        final double LIN_SLIDE_OFF = 0;
+        final double LIN_SLIDE_ON = 100;
         double armPosition = (int) ARM_COLLAPSED_INTO_ROBOT;
+        double linSlidePosition = (int) LIN_SLIDE_OFF;
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         linSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ((DcMotorEx) arm).setCurrentAlert(0.1, CurrentUnit.AMPS);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+        linSlideLeft.setTargetPosition(0);
+        linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setPower(INTAKE_OFF);
-        wrist.setPosition(WRIST_FOLDED_IN);
+        outtake.setPosition(OUTTAKE_COLLECT);
 
 
         telemetry.addLine("Robot Ready.");
@@ -80,6 +83,7 @@ public class TeleOpMode extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            //DRIVETRAIN
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
@@ -94,11 +98,15 @@ public class TeleOpMode extends LinearOpMode {
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
-
-            double extend = -gamepad2.right_stick_y;
-            linSlideLeft.setPower(extend);
-            linSlideRight.setPower(extend);
-
+            //ARM LINEAR SLIDE
+            if (gamepad1.right_trigger > 0) {
+                double extend = gamepad2.right_trigger;
+                armLinSlide.setPower(extend);
+            } else if (gamepad1.left_trigger > 0) {
+                double extend = gamepad2.left_trigger;
+                armLinSlide.setPower(extend);
+            }
+            //INTAKE
             if (gamepad2.a) {
                 intake.setPower(1);
             } else if (gamepad2.x) {
@@ -106,38 +114,16 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.b) {
                 intake.setPower(-1);
             }
-
+            //OUTTAKE
             if (gamepad2.left_bumper) {
-                wrist.setPosition(WRIST_FOLDED_OUT);
+                outtake.setPosition(OUTTAKE_COLLECT);
             } else if (gamepad2.right_bumper) {
-                wrist.setPosition(WRIST_FOLDED_IN);
+                outtake.setPosition(OUTTAKE_DISPOSE);
             }
-
-/*
-            if (gamepad2.dpad_up){
-
-                ((DcMotorEx) arm).setVelocity(1);
-
-
-            } else if (gamepad2.dpad_down){
-                armPosition = ARM_DROP;
-            } else if (gamepad2.dpad_left){
-                armPosition = ARM_COLLAPSED_INTO_ROBOT;
-            }
-            arm.setTargetPosition((int) armPosition);
-            ((DcMotorEx) arm).setVelocity(200);
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        if (((DcMotorEx) arm).isOverCurrent()){
-            telemetry.addLine("MOTOR EXCEEDED CURRENT LIMIT!");
-        }
-
-*/
+            //ARM
             if (gamepad2.dpad_up) {
                 armPosition = 0;
 
-
-                 // Move up by a set increment
             } else if (gamepad2.dpad_down) {
                 armPosition = -3400;
 
@@ -148,16 +134,18 @@ public class TeleOpMode extends LinearOpMode {
             ((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //OUTTAKE LINEAR SLIDE
+            if (gamepad2.left_trigger > 0) {
+                linSlidePosition = LIN_SLIDE_OFF;
 
 
-
-            /*if (arm.isBusy()) {
-
-            } else {
-                arm.setPower(0);
+            } else if (gamepad2.right_trigger > 0) {
+                linSlidePosition = LIN_SLIDE_ON;
             }
-*/
-
+            ((DcMotorEx) linSlideLeft).setVelocity(1000);
+            linSlideLeft.setTargetPosition((int) linSlidePosition);
+            linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //PID STUFF
             telemetry.addData("armTarget: ", arm.getTargetPosition());
             telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
             telemetry.update();
