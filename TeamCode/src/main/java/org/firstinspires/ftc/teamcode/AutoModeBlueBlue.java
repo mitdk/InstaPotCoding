@@ -43,7 +43,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(100);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -54,7 +54,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(-3400);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -65,7 +65,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(0);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -168,6 +168,60 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 }
                 if (pos == 1000) {
                     LinSlideLeft.setPower(0);
+                    return false;
+                }
+                return false;
+            }
+        }
+        public Action linSlideLeftUp() {
+            return new LinSlideLeftUp();
+        }
+        public class LinSlideLeftDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = LinSlideLeft.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos > 1) {
+
+                } else {
+                    LinSlideLeft.setPower(0);
+                    return false;
+                }
+                return false;
+            }
+        }
+    }
+    public class LinearSlideArm{
+        public DcMotorEx LinSlideArm;
+
+        public LinearSlideArm(HardwareMap hardwareMap) {
+            LinSlideArm = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            LinSlideArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            LinSlideArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+        public Action linSlideArmRetract() {            return new LinSlideLeftDown();
+        }
+
+        public class LinSlideLeftUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = LinSlideArm.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos < 1) {
+
+                } else {
+                    LinSlideArm.setPower(0);
                     return false;
                 }
                 return false;

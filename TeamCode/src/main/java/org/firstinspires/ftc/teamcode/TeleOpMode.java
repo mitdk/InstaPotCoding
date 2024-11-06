@@ -99,13 +99,17 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             //ARM LINEAR SLIDE
-            if (gamepad1.right_trigger > 0) {
+            double extend = gamepad2.right_trigger;
+            armLinSlide.setPower(extend);
+            double retract = gamepad2.right_trigger;
+            armLinSlide.setPower(-extend);
+          /*  if (gamepad1.right_trigger > 0) {
                 double extend = gamepad2.right_trigger;
                 armLinSlide.setPower(extend);
             } else if (gamepad1.left_trigger > 0) {
                 double extend = gamepad2.left_trigger;
                 armLinSlide.setPower(extend);
-            }
+            }*/
             //INTAKE
             if (gamepad2.a) {
                 intake.setPower(1);
