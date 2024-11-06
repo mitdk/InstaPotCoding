@@ -163,9 +163,10 @@ public class AutoModeRedYellow extends LinearOpMode {
                 }
                 double pos = LinSlideLeft.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 1) {
-
-                } else {
+                while (pos < 1000) {
+                    LinSlideLeft.setPower(100);
+                }
+                if (pos == 1000) {
                     LinSlideLeft.setPower(0);
                     return false;
                 }
@@ -185,10 +186,66 @@ public class AutoModeRedYellow extends LinearOpMode {
                 }
                 double pos = LinSlideLeft.getCurrentPosition();
                 packet.put("liftPos", pos);
+                while (pos > 1000) {
+                    LinSlideLeft.setPower(-100);
+                }
+                if (pos == 1000) {
+                    LinSlideLeft.setPower(0);
+                    return false;
+                }
+                return false;
+            }
+        }
+    }
+    public class armLinearSlide{
+        public DcMotorEx armLinSlide;
+
+        public armLinearSlide(HardwareMap hardwareMap) {
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+        public Action armLinSlideDown() {
+            return new AutoModeRedYellow.armLinearSlide.armLinSlideDown();
+        }
+
+        public class armLinSlideUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = armLinSlide.getCurrentPosition();
+                packet.put("liftPos", pos);
+                if (pos < 1) {
+
+                } else {
+                    armLinSlide.setPower(0);
+                    return false;
+                }
+                return false;
+            }
+        }
+        public Action armlinSlideUp() {
+            return new AutoModeRedYellow.armLinearSlide.armLinSlideUp();
+        }
+        public class armLinSlideDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = armLinSlide.getCurrentPosition();
+                packet.put("liftPos", pos);
                 if (pos > 1) {
 
                 } else {
-                    LinSlideLeft.setPower(0);
+                    armLinSlide.setPower(0);
                     return false;
                 }
                 return false;
