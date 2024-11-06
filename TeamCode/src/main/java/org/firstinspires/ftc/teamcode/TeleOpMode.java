@@ -99,9 +99,9 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             //ARM LINEAR SLIDE
-            double extend = gamepad2.right_trigger;
+            double extend = gamepad1.right_trigger;
             armLinSlide.setPower(extend);
-            double retract = gamepad2.right_trigger;
+            double retract = gamepad1.left_trigger;
             armLinSlide.setPower(-extend);
           /*  if (gamepad1.right_trigger > 0) {
                 double extend = gamepad2.right_trigger;
@@ -135,20 +135,24 @@ public class TeleOpMode extends LinearOpMode {
                 armPosition = 100 ;
 
             }
-            ((DcMotorEx) arm).setVelocity(2100);
+            //((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm.setPower(0.5);
             //OUTTAKE LINEAR SLIDE
             if (gamepad2.left_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_OFF;
 
-
             } else if (gamepad2.right_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_ON;
             }
-            ((DcMotorEx) linSlideLeft).setVelocity(1000);
+            linSlideLeft.setPower(0.5);
             linSlideLeft.setTargetPosition((int) linSlidePosition);
             linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            
+            /*
+            
+                */
             //PID STUFF
             telemetry.addData("armTarget: ", arm.getTargetPosition());
             telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
