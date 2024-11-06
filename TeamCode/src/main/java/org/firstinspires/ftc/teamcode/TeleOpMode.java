@@ -63,14 +63,15 @@ public class TeleOpMode extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        
+        linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linSlideLeft.setTargetPosition(0);
         linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
         intake.setPower(INTAKE_OFF);
         outtake.setPosition(OUTTAKE_COLLECT);
 
