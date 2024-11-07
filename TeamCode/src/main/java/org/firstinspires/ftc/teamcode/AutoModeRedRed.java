@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name = "AutoMode")
+@Autonomous(name = "AutoModeRedRed")
 
 public class AutoModeRedRed extends LinearOpMode {
     public class Arm {
@@ -40,7 +40,7 @@ public class AutoModeRedRed extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(100);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -51,7 +51,7 @@ public class AutoModeRedRed extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(-3400);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -62,7 +62,7 @@ public class AutoModeRedRed extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 Arm.setTargetPosition(0);
-                Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
             }
         }
@@ -80,7 +80,7 @@ public class AutoModeRedRed extends LinearOpMode {
         public class IntakeCollect implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(-3);
+                Intake.setPower(-1);
                 return false;
             }
         }
@@ -90,7 +90,7 @@ public class AutoModeRedRed extends LinearOpMode {
         public class IntakeDispose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(3);
+                Intake.setPower(1);
                 return false;
             }
         }
@@ -161,7 +161,7 @@ public class AutoModeRedRed extends LinearOpMode {
                 double pos = LinSlideLeft.getCurrentPosition();
                 packet.put("liftPos", pos);
                 while (pos < 1000) {
-                    LinSlideLeft.setPower(100);
+                    LinSlideLeft.setPower(0.9);
                 }
                 if (pos == 1000) {
                     LinSlideLeft.setPower(0);
