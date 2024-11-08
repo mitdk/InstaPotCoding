@@ -47,7 +47,7 @@ public class TeleOpMode extends LinearOpMode {
         final double ARM_COLLECT = -3000;
         final double ARM_DROP = -10;
         final double LIN_SLIDE_OFF = 0;
-        final double LIN_SLIDE_ON = 100;
+        final double LIN_SLIDE_ON = 3965;
         double armPosition = (int) ARM_COLLAPSED_INTO_ROBOT;
         double linSlidePosition = (int) LIN_SLIDE_OFF;
         // Brake code
@@ -62,17 +62,21 @@ public class TeleOpMode extends LinearOpMode {
         ((DcMotorEx) arm).setCurrentAlert(0.1, CurrentUnit.AMPS);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        linSlideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        //outtake.setDirection(Servo.Direction.REVERSE);
 
-
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        
+        linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linSlideLeft.setTargetPosition(0);
         linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
         intake.setPower(INTAKE_OFF);
-        outtake.setPosition(OUTTAKE_COLLECT);
+        outtake.setPosition(0.5);
 
 
         telemetry.addLine("Robot Ready.");
@@ -99,10 +103,9 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             //ARM LINEAR SLIDE
-            double extend = gamepad2.right_trigger;
+            double extend = gamepad2.left_stick_y;
             armLinSlide.setPower(extend);
-            double retract = gamepad2.right_trigger;
-            armLinSlide.setPower(-extend);
+
           /*  if (gamepad1.right_trigger > 0) {
                 double extend = gamepad2.right_trigger;
                 armLinSlide.setPower(extend);
@@ -112,43 +115,51 @@ public class TeleOpMode extends LinearOpMode {
             }*/
             //INTAKE
             if (gamepad2.a) {
-                intake.setPower(1);
+                intake.setPower(0.5);
             } else if (gamepad2.x) {
                 intake.setPower(0);
             } else if (gamepad2.b) {
-                intake.setPower(-1);
+                intake.setPower(-0.5);
+
             }
             //OUTTAKE
             if (gamepad2.left_bumper) {
-                outtake.setPosition(OUTTAKE_COLLECT);
+                outtake.setPosition(0.7);
+
+
             } else if (gamepad2.right_bumper) {
-                outtake.setPosition(OUTTAKE_DISPOSE);
+                outtake.setPosition(0.95);
+
             }
             //ARM
             if (gamepad2.dpad_up) {
                 armPosition = 0;
 
             } else if (gamepad2.dpad_down) {
-                armPosition = -3400;
+                armPosition = 2500;
 
             } else if (gamepad2.dpad_left) {
                 armPosition = 100 ;
 
             }
-            ((DcMotorEx) arm).setVelocity(2100);
+            //((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm.setPower(0.5);
             //OUTTAKE LINEAR SLIDE
             if (gamepad2.left_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_OFF;
 
-
             } else if (gamepad2.right_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_ON;
             }
-            ((DcMotorEx) linSlideLeft).setVelocity(1000);
+            linSlideLeft.setPower(0.95);
             linSlideLeft.setTargetPosition((int) linSlidePosition);
             linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            
+            /*
+            
+                */
             //PID STUFF
             telemetry.addData("armTarget: ", arm.getTargetPosition());
             telemetry.addData("arm Encoder: ", arm.getCurrentPosition());

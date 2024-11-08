@@ -196,16 +196,16 @@ public class AutoModeBlueBlue extends LinearOpMode {
             }
         }
     }
-    public class LinearSlideArm{
-        public DcMotorEx LinSlideArm;
+    public class LinearSlideLeft {
+        public DcMotorEx LinSlideLeft;
 
-        public LinearSlideArm(HardwareMap hardwareMap) {
-            LinSlideArm = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
-            LinSlideArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            LinSlideArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        public LinearSlideLeft(HardwareMap hardwareMap) {
+            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            LinSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            LinSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         }
 
-        public Action linSlideArmRetract() {            return new LinSlideLeftDown();
+        public Action linSlideLefRetract() {            return new LinSlideLeftDown();
         }
 
         public class LinSlideLeftUp implements Action {
@@ -216,12 +216,12 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 if (!initialized) {
 
                 }
-                double pos = LinSlideArm.getCurrentPosition();
+                double pos = LinSlideLeft.getCurrentPosition();
                 packet.put("liftPos", pos);
                 if (pos < 1) {
 
                 } else {
-                    LinSlideArm.setPower(0);
+                    LinSlideLeft.setPower(0);
                     return false;
                 }
                 return false;
@@ -255,15 +255,10 @@ public class AutoModeBlueBlue extends LinearOpMode {
         public DcMotorEx armLinSlide;
 
         public armLinearSlide(HardwareMap hardwareMap) {
-            armLinSlide = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "ArmLinearSlide");
             armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         }
-
-        public Action armLinSlideDown() {
-            return new armLinSlideDown();
-        }
-
         public class armLinSlideUp implements Action {
             private boolean initialized = false;
 
@@ -295,7 +290,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
 
                 }
                 double pos = armLinSlide.getCurrentPosition();
-                packet.put("liftPos", pos);
+                packet.put("armLinSlidePos", pos);
                 if (pos > 1) {
 
                 } else {
@@ -304,6 +299,9 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 }
                 return false;
             }
+        }
+        public Action armLinSlideDown() {
+            return new armLinSlideDown();
         }
         public Action armLinSlideStraight() {
             return new armLinSlideStraight();
@@ -317,7 +315,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
 
                 }
                 double pos = armLinSlide.getCurrentPosition();
-                packet.put("liftPos", pos);
+                packet.put("armLinSlidePos", pos);
                 if (pos > 1) {
 
                 } else {
@@ -327,6 +325,9 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 return false;
             }
 
+        }
+        public Action ArmLinSlideStraight() {
+            return new armLinSlideStraight();
         }
     }
     @Override

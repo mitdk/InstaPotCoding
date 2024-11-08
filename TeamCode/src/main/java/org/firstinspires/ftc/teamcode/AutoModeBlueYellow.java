@@ -185,10 +185,9 @@ public class AutoModeBlueYellow extends LinearOpMode {
                 }
                 double pos = LinSlideLeft.getCurrentPosition();
                 packet.put("liftPos", pos);
-                while (pos > 1000) {
-                    LinSlideLeft.setPower(-100);
-                }
-                if (pos == 1000) {
+                if (pos > 1) {
+
+                } else {
                     LinSlideLeft.setPower(0);
                     return false;
                 }
