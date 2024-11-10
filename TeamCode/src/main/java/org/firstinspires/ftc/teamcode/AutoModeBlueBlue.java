@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.Action;
 // Non-RR imports
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -22,23 +21,21 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-import org.jetbrains.annotations.NotNull;
 
-
-@Autonomous(name = "AutoMode")
+@Autonomous(name = "AutoModeBlueBlue")
 
 public class AutoModeBlueBlue extends LinearOpMode {
-    public class Arm {
+   /* public class Arm {
         private DcMotorEx Arm;
 
         public Arm(HardwareMap hardwareMap) {
-            Arm = hardwareMap.get(DcMotorEx.class, "armMotor");
+            Arm = hardwareMap.get(DcMotorEx.class, "arm");
             Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Arm.setTargetPosition(0);
             Arm.setVelocity(2100);
             Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+        }/
         public class ArmCollect implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -77,13 +74,13 @@ public class AutoModeBlueBlue extends LinearOpMode {
         private CRServo Intake;
 
         public Intake(HardwareMap hardwareMap) {
-            Intake = hardwareMap.get(CRServo.class, "Intake");
+            Intake = hardwareMap.get(CRServo.class, "intake");
         }
 
         public class IntakeCollect implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(-3);
+                Intake.setPower(-1);
                 return false;
             }
         }
@@ -93,7 +90,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
         public class IntakeDispose implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                Intake.setPower(3);
+                Intake.setPower(1);
                 return false;
             }
         }
@@ -115,7 +112,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
         private Servo Outtake;
 
         public Outtake(HardwareMap hardwareMap) {
-            Outtake = hardwareMap.get(Servo.class, "Outtake");
+            Outtake = hardwareMap.get(Servo.class, "outtake");
         }
 
         public class OuttakeCollect implements Action {
@@ -144,121 +141,72 @@ public class AutoModeBlueBlue extends LinearOpMode {
         public DcMotorEx LinSlideLeft;
 
         public LinearSlideLeft(HardwareMap hardwareMap) {
-            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "linSlideLeft");
             LinSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             LinSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+        public class LinSlideLeftUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = LinSlideLeft.getCurrentPosition();
+                packet.put("linSlideLeftPos", pos);
+                while (pos < 3965) {
+                    LinSlideLeft.setPower(0.9);
+                }
+                if (pos == 3965) {
+                    LinSlideLeft.setPower(0);
+                    return false;
+                }
+                return false;
+            }
+        }
+        public Action linSlideLeftUp() {
+            return new LinSlideLeftUp();
+        }
+        public class LinSlideLeftDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+
+                }
+                double pos = LinSlideLeft.getCurrentPosition();
+                packet.put("linSlideLeftPos", pos);
+                while (pos < 3965) {
+                    LinSlideLeft.setPower(-100);
+                }
+                if (pos == 0) {
+                    LinSlideLeft.setPower(0);
+                    return false;
+                }
+                return false;
+            }
         }
 
         public Action linSlideLeftDown() {
             return new LinSlideLeftDown();
         }
-
-        public class LinSlideLeftUp implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = LinSlideLeft.getCurrentPosition();
-                packet.put("liftPos", pos);
-                while (pos < 1000) {
-                    LinSlideLeft.setPower(100);
-                }
-                if (pos == 1000) {
-                    LinSlideLeft.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-        }
-        public Action linSlideLeftUp() {
-            return new LinSlideLeftUp();
-        }
-        public class LinSlideLeftDown implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = LinSlideLeft.getCurrentPosition();
-                packet.put("liftPos", pos);
-                if (pos > 1) {
-
-                } else {
-                    LinSlideLeft.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-        }
     }
-    public class LinearSlideLeft {
-        public DcMotorEx LinSlideLeft;
-
-        public LinearSlideLeft(HardwareMap hardwareMap) {
-            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
-            LinSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            LinSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
-
-        public Action linSlideLefRetract() {            return new LinSlideLeftDown();
-        }
-
-        public class LinSlideLeftUp implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = LinSlideLeft.getCurrentPosition();
-                packet.put("liftPos", pos);
-                if (pos < 1) {
-
-                } else {
-                    LinSlideLeft.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-        }
-        public Action linSlideLeftUp() {
-            return new LinSlideLeftUp();
-        }
-        public class LinSlideLeftDown implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = LinSlideLeft.getCurrentPosition();
-                packet.put("liftPos", pos);
-                while (pos > 1000) {
-                    LinSlideLeft.setPower(-100);
-                }
-                if (pos == 1000) {
-                    LinSlideLeft.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-        }
-    }
-    public class armLinearSlide{
+    public class ArmLinearSlide {
         public DcMotorEx armLinSlide;
 
-        public armLinearSlide(HardwareMap hardwareMap) {
-            armLinSlide = hardwareMap.get(DcMotorEx.class, "ArmLinearSlide");
+        public ArmLinearSlide(HardwareMap hardwareMap) {
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "armLinSlide");
             armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         }
+
+        public Action armLinSlideDown() {
+            return new ArmLinearSlide.armLinSlideDown();
+        }
+
         public class armLinSlideUp implements Action {
             private boolean initialized = false;
 
@@ -268,7 +216,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
 
                 }
                 double pos = armLinSlide.getCurrentPosition();
-                packet.put("liftPos", pos);
+                packet.put("armLinSlidePos", pos);
                 if (pos < 1) {
 
                 } else {
@@ -279,7 +227,7 @@ public class AutoModeBlueBlue extends LinearOpMode {
             }
         }
         public Action armlinSlideUp() {
-            return new armLinSlideUp();
+            return new ArmLinearSlide.armLinSlideUp();
         }
         public class armLinSlideDown implements Action {
             private boolean initialized = false;
@@ -300,52 +248,27 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 return false;
             }
         }
-        public Action armLinSlideDown() {
-            return new armLinSlideDown();
-        }
-        public Action armLinSlideStraight() {
-            return new armLinSlideStraight();
-        }
-        public class armLinSlideStraight implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = armLinSlide.getCurrentPosition();
-                packet.put("armLinSlidePos", pos);
-                if (pos > 1) {
-
-                } else {
-                    armLinSlide.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-
-        }
-        public Action ArmLinSlideStraight() {
-            return new armLinSlideStraight();
-        }
     }
+    */
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(-11.8, -61.7, Math.toRadians(0));
+        Pose2d basketPose = new Pose2d(55, 55, Math.toRadians(-135));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-        Arm arm = new Arm(hardwareMap);
-        Outtake outtake = new Outtake(hardwareMap);
-        Intake intake = new Intake(hardwareMap);
-        LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
-        armLinearSlide armLinSlide = new armLinearSlide(hardwareMap);
+      //  Arm arm = new Arm(hardwareMap);
+        //Outtake outtake = new Outtake(hardwareMap);
+       // Intake intake = new Intake(hardwareMap);
+       // LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
+       // ArmLinearSlide armLinSlide = new ArmLinearSlide(hardwareMap);
+        TrajectoryActionBuilder basket1 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(-60,-60));
 
-        TrajectoryActionBuilder BlueBlue = drive.actionBuilder(initialPose)
-                //BLUE SIDE BLUE SAMPLE
                 //Brings the robot to the basket for first sample
-                .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(-135)), Math.toRadians(0)).afterTime(1, linearSlideLeft.linSlideLeftUp())
+          /*      .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)), Math.toRadians(0))
+                .afterTime(1, linearSlideLeft.linSlideLeftUp())
                 //Disposes 1st sample into basket
-                .stopAndAdd(outtake.outtakeDispose())
+                .stopAndAdd(outtake.outtakeDispose());
+        TrajectoryActionBuilder sample1 = drive.actionBuilder((basketPose))
                 //Brings robot to second sample block, the middle one of the 3 outside the sub
                 .afterTime(4, outtake.outtakeCollect())
                 .afterTime(4, linearSlideLeft.linSlideLeftDown())
@@ -353,25 +276,47 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 .afterTime(6, arm.armCollect())
                 .afterTime(6, armLinSlide.armlinSlideUp())
                 //Intakes 2nd sample block
-                .stopAndAdd(intake.intakeCollect())
-                //Travel to basket
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket2 = drive.actionBuilder(new Pose2d(-36.7,25.8, Math.toRadians(180)))
                 .afterTime(8, armLinSlide.armLinSlideDown())
                 .afterTime(9, arm.armIntoBasket())
                 .afterTime(10, armLinSlide.armlinSlideUp())
                 .strafeToConstantHeading(new Vector2d(-36.7, 40.8))
                 .afterTime(10.5, intake.intakeDispose())
                 .afterTime(11, linearSlideLeft.linSlideLeftUp())
-                .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(-135)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(225)), Math.toRadians(0))
                 //Deposits 2nd sample block
                 .stopAndAdd(outtake.outtakeDispose())
-                .afterTime(14, outtake.outtakeCollect())
+                .afterTime(14, outtake.outtakeCollect());
+        TrajectoryActionBuilder sample2 = drive.actionBuilder(new Pose2d(55, 55, Math.toRadians(-135)))
                 //goes to 3rd sample
                 .afterTime(14, linearSlideLeft.linSlideLeftDown())
                 .splineToLinearHeading(new Pose2d(-48,25.8, Math.toRadians(180)), Math.toRadians(-90))
                 .afterTime(17, arm.armCollect())
                 .afterTime(17, armLinSlide.armlinSlideUp())
                 //Intakes 3rd sample block
-                .stopAndAdd(intake.intakeCollect())
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket3 = drive.actionBuilder(new Pose2d(-48, 25.8, Math.toRadians(0)))
+                //Travel to basket
+                .afterTime(8, armLinSlide.armLinSlideDown())
+                .afterTime(9, arm.armIntoBasket())
+                .afterTime(10, armLinSlide.armlinSlideUp())
+                .strafeToConstantHeading(new Vector2d(-48.7, 40.8))
+                .afterTime(10.5, intake.intakeDispose())
+                .afterTime(11, linearSlideLeft.linSlideLeftUp())
+                .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(-135)), Math.toRadians(0))
+                //Deposits 2nd sample block
+                .stopAndAdd(outtake.outtakeDispose())
+                .afterTime(14, outtake.outtakeCollect());
+        TrajectoryActionBuilder sample3 = drive.actionBuilder(new Pose2d(55, 55, Math.toRadians(-135)))
+                //goes to 3rd sample
+                .afterTime(14, linearSlideLeft.linSlideLeftDown())
+                .splineToLinearHeading(new Pose2d(-48,25.8, Math.toRadians(180)), Math.toRadians(-90))
+                .afterTime(17, arm.armCollect())
+                .afterTime(17, armLinSlide.armlinSlideUp())
+                //Intakes 3rd sample block
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket4 = drive.actionBuilder(new Pose2d(-48,25.8, Math.toRadians(180)))
                 //Travel to Basket
                 .afterTime(19, armLinSlide.armLinSlideDown())
                 .afterTime(20, arm.armIntoBasket())
@@ -380,18 +325,23 @@ public class AutoModeBlueBlue extends LinearOpMode {
                 .afterTime(23, linearSlideLeft.linSlideLeftUp())
                 .strafeToConstantHeading(new Vector2d(-48, 40.8))
                 .splineToLinearHeading(new Pose2d(55, 55, Math.toRadians(-135)), Math.toRadians(0))
-                .stopAndAdd(outtake.outtakeDispose())
-
+                .stopAndAdd(outtake.outtakeDispose());
+        TrajectoryActionBuilder close = drive.actionBuilder(new Pose2d(55, 55, Math.toRadians(-135)))
                 .afterTime(26, outtake.outtakeCollect())
                 .afterTime(23, linearSlideLeft.linSlideLeftDown())
                 //Travel to park zone
                 .strafeToLinearHeading(new Vector2d(-58, 61), Math.toRadians(180));
+                */
+
+
+
         waitForStart();
         if(isStopRequested()) return;
-        while(opModeIsActive()){
+        if(opModeIsActive()){
             Actions.runBlocking(
                     new SequentialAction(
-                            BlueBlue.build()
+                            basket1.build()
+
                     )
             );
         }

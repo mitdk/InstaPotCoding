@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
 
@@ -31,7 +31,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
         private DcMotorEx Arm;
 
         public Arm(HardwareMap hardwareMap) {
-            Arm = hardwareMap.get(DcMotorEx.class, "armMotor");
+            Arm = hardwareMap.get(DcMotorEx.class, "arm");
             Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Arm.setTargetPosition(0);
             Arm.setVelocity(2100);
@@ -76,7 +76,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
         private CRServo Intake;
 
         public Intake(HardwareMap hardwareMap) {
-            Intake = hardwareMap.get(CRServo.class, "Intake");
+            Intake = hardwareMap.get(CRServo.class, "intake");
         }
 
         public class IntakeCollect implements Action {
@@ -114,7 +114,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
         private Servo Outtake;
 
         public Outtake(HardwareMap hardwareMap) {
-            Outtake = hardwareMap.get(Servo.class, "Outtake");
+            Outtake = hardwareMap.get(Servo.class, "outtake");
         }
 
         public class OuttakeCollect implements Action {
@@ -143,7 +143,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
         public DcMotorEx LinSlideLeft;
 
         public LinearSlideLeft(HardwareMap hardwareMap) {
-            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "linSlideLeft");
             LinSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             LinSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -199,7 +199,7 @@ public class AutoModeBlueYellow extends LinearOpMode {
         public DcMotorEx armLinSlide;
 
         public armLinearSlide(HardwareMap hardwareMap) {
-            armLinSlide = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "armLinSlide");
             armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -333,3 +333,6 @@ public class AutoModeBlueYellow extends LinearOpMode {
 
     }
 }
+
+8/
+ */

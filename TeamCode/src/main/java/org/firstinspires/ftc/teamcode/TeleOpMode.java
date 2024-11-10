@@ -60,10 +60,12 @@ public class TeleOpMode extends LinearOpMode {
 
         linSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ((DcMotorEx) arm).setCurrentAlert(0.1, CurrentUnit.AMPS);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         linSlideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        armLinSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         //outtake.setDirection(Servo.Direction.REVERSE);
 
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,23 +90,25 @@ public class TeleOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             //DRIVETRAIN
-            double y = -gamepad1.left_stick_y;
+            double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx)
+                    , 1);
             double frontLeftPower = (y - x + rx) / denominator;
             double backLeftPower = (y + x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
             frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
+            backLeftMotor.setPower(backLeftPower*0.8);
+            frontRightMotor.setPower(frontRightPower*0.8);
+            backRightMotor.setPower(backRightPower*0.8);
             //ARM LINEAR SLIDE
             double extend = gamepad2.left_stick_y;
-            armLinSlide.setPower(extend);
+            armLinSlide.setPower(extend/2);
+
 
           /*  if (gamepad1.right_trigger > 0) {
                 double extend = gamepad2.right_trigger;
@@ -115,20 +119,20 @@ public class TeleOpMode extends LinearOpMode {
             }*/
             //INTAKE
             if (gamepad2.a) {
-                intake.setPower(0.5);
+                intake.setPower(0.25);
             } else if (gamepad2.x) {
                 intake.setPower(0);
             } else if (gamepad2.b) {
-                intake.setPower(-0.5);
+                intake.setPower(-0.25);
 
             }
             //OUTTAKE
             if (gamepad2.left_bumper) {
-                outtake.setPosition(0.7);
+                outtake.setPosition(0.75);
 
 
             } else if (gamepad2.right_bumper) {
-                outtake.setPosition(0.95);
+                outtake.setPosition(1);
 
             }
             //ARM
@@ -136,12 +140,14 @@ public class TeleOpMode extends LinearOpMode {
                 armPosition = 0;
 
             } else if (gamepad2.dpad_down) {
-                armPosition = 2500;
+                armPosition = 2450;
 
             } else if (gamepad2.dpad_left) {
                 armPosition = 100 ;
 
             }
+            double FUDGE_FACTOR = 15*19.7924893140647;
+            double armPositionFudgeFactor = FUDGE_FACTOR * (gamepad2.right_trigger + (-gamepad2.left_trigger));
             //((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -153,7 +159,7 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.right_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_ON;
             }
-            linSlideLeft.setPower(0.95);
+            linSlideLeft.setPower(0.7);
             linSlideLeft.setTargetPosition((int) linSlidePosition);
             linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             

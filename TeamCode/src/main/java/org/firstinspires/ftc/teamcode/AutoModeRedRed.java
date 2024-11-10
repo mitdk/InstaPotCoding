@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
 
@@ -29,7 +29,7 @@ public class AutoModeRedRed extends LinearOpMode {
         private DcMotorEx Arm;
 
         public Arm(HardwareMap hardwareMap) {
-            Arm = hardwareMap.get(DcMotorEx.class, "armMotor");
+            Arm = hardwareMap.get(DcMotorEx.class, "arm");
             Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             Arm.setTargetPosition(0);
             Arm.setVelocity(2100);
@@ -74,7 +74,7 @@ public class AutoModeRedRed extends LinearOpMode {
         private CRServo Intake;
 
         public Intake(HardwareMap hardwareMap) {
-            Intake = hardwareMap.get(CRServo.class, "Intake");
+            Intake = hardwareMap.get(CRServo.class, "intake");
         }
 
         public class IntakeCollect implements Action {
@@ -112,7 +112,7 @@ public class AutoModeRedRed extends LinearOpMode {
         private Servo Outtake;
 
         public Outtake(HardwareMap hardwareMap) {
-            Outtake = hardwareMap.get(Servo.class, "Outtake");
+            Outtake = hardwareMap.get(Servo.class, "outtake");
         }
 
         public class OuttakeCollect implements Action {
@@ -141,7 +141,7 @@ public class AutoModeRedRed extends LinearOpMode {
         public DcMotorEx LinSlideLeft;
 
         public LinearSlideLeft(HardwareMap hardwareMap) {
-            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "LinearSlideLeft");
+            LinSlideLeft = hardwareMap.get(DcMotorEx.class, "linSlideLeft");
             LinSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             LinSlideLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -198,7 +198,7 @@ public class AutoModeRedRed extends LinearOpMode {
         public DcMotorEx armLinSlide;
 
         public ArmLinearSlide(HardwareMap hardwareMap) {
-            armLinSlide = hardwareMap.get(DcMotorEx.class, "ArmLinearSlide");
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "armLinSLide");
             armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -252,46 +252,68 @@ public class AutoModeRedRed extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d basketPose = new Pose2d(55, 55, Math.toRadians(-135));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Arm arm = new Arm(hardwareMap);
         Outtake outtake = new Outtake(hardwareMap);
         Intake intake = new Intake(hardwareMap);
         LinearSlideLeft linearSlideLeft = new LinearSlideLeft(hardwareMap);
         ArmLinearSlide armLinSlide = new ArmLinearSlide(hardwareMap);
-
-
-        TrajectoryActionBuilder RedRed = drive.actionBuilder(initialPose)
-                //RED SIDE RED SAMPLE
+        TrajectoryActionBuilder basket1 = drive.actionBuilder(initialPose)
                 //Brings the robot to the basket for first sample
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
                 .afterTime(1, linearSlideLeft.linSlideLeftUp())
                 //Disposes 1st sample into basket
-                .stopAndAdd(outtake.outtakeDispose())
+                .stopAndAdd(outtake.outtakeDispose());
+        TrajectoryActionBuilder sample1 = drive.actionBuilder((basketPose))
                 //Brings robot to second sample block, the middle one of the 3 outside the sub
                 .afterTime(4, outtake.outtakeCollect())
                 .afterTime(4, linearSlideLeft.linSlideLeftDown())
-                .splineToLinearHeading(new Pose2d(36.7,-25.8, Math.toRadians(0)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-36.7,25.8, Math.toRadians(180)), Math.toRadians(-90))
                 .afterTime(6, arm.armCollect())
                 .afterTime(6, armLinSlide.armlinSlideUp())
                 //Intakes 2nd sample block
-                .stopAndAdd(intake.intakeCollect())
-                //Travel to basket
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket2 = drive.actionBuilder(new Pose2d(36.7,-25.8, Math.toRadians(0)))
                 .afterTime(8, armLinSlide.armLinSlideDown())
                 .afterTime(9, arm.armIntoBasket())
+                .afterTime(10, armLinSlide.armlinSlideUp())
                 .strafeToConstantHeading(new Vector2d(36.7, -40.8))
-                .afterTime(10, intake.intakeDispose())
+                .afterTime(10.5, intake.intakeDispose())
                 .afterTime(11, linearSlideLeft.linSlideLeftUp())
-                .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(-45)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
                 //Deposits 2nd sample block
                 .stopAndAdd(outtake.outtakeDispose())
-                .afterTime(14, outtake.outtakeCollect())
+                .afterTime(14, outtake.outtakeCollect());
+        TrajectoryActionBuilder sample2 = drive.actionBuilder(new Pose2d(-55, -55, Math.toRadians(45)))
                 //goes to 3rd sample
                 .afterTime(14, linearSlideLeft.linSlideLeftDown())
                 .splineToLinearHeading(new Pose2d(48,-25.8, Math.toRadians(0)), Math.toRadians(90))
                 .afterTime(17, arm.armCollect())
                 .afterTime(17, armLinSlide.armlinSlideUp())
                 //Intakes 3rd sample block
-                .stopAndAdd(intake.intakeCollect())
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket3 = drive.actionBuilder(new Pose2d(48, -25.8, Math.toRadians(180)))
+                //Travel to basket
+                .afterTime(8, armLinSlide.armLinSlideDown())
+                .afterTime(9, arm.armIntoBasket())
+                .afterTime(10, armLinSlide.armlinSlideUp())
+                .strafeToConstantHeading(new Vector2d(48.7, -40.8))
+                .afterTime(10.5, intake.intakeDispose())
+                .afterTime(11, linearSlideLeft.linSlideLeftUp())
+                .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
+                //Deposits 2nd sample block
+                .stopAndAdd(outtake.outtakeDispose())
+                .afterTime(14, outtake.outtakeCollect());
+        TrajectoryActionBuilder sample3 = drive.actionBuilder(new Pose2d(-55, -55, Math.toRadians(45)))
+                //goes to 3rd sample
+                .afterTime(14, linearSlideLeft.linSlideLeftDown())
+                .splineToLinearHeading(new Pose2d(48,-25.8, Math.toRadians(0)), Math.toRadians(90))
+                .afterTime(17, arm.armCollect())
+                .afterTime(17, armLinSlide.armlinSlideUp())
+                //Intakes 3rd sample block
+                .stopAndAdd(intake.intakeCollect());
+        TrajectoryActionBuilder basket4 = drive.actionBuilder(new Pose2d(48,-25.8, Math.toRadians(0)))
                 //Travel to Basket
                 .afterTime(19, armLinSlide.armLinSlideDown())
                 .afterTime(20, arm.armIntoBasket())
@@ -300,22 +322,25 @@ public class AutoModeRedRed extends LinearOpMode {
                 .afterTime(23, linearSlideLeft.linSlideLeftUp())
                 .strafeToConstantHeading(new Vector2d(48, -40.8))
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.toRadians(45)), Math.toRadians(180))
-                //Deposits 3rd sample block
-                .stopAndAdd(outtake.outtakeDispose())
-
+                .stopAndAdd(outtake.outtakeDispose());
+        TrajectoryActionBuilder close = drive.actionBuilder(new Pose2d(-55, -55, Math.toRadians(45)))
                 .afterTime(26, outtake.outtakeCollect())
                 .afterTime(23, linearSlideLeft.linSlideLeftDown())
                 //Travel to park zone
                 .strafeToLinearHeading(new Vector2d(58, -61), Math.toRadians(0));
-
-
-
         waitForStart();
         if(isStopRequested()) return;
-        while(opModeIsActive()){
+        if(opModeIsActive()){
             Actions.runBlocking(
                     new SequentialAction(
-                            RedRed.build()
+                            basket1.build(),
+                            sample1.build(),
+                            basket2.build(),
+                            sample2.build(),
+                            basket3.build(),
+                            sample3.build(),
+                            basket4.build(),
+                            close.build()
                     )
             );
         }
@@ -327,4 +352,12 @@ public class AutoModeRedRed extends LinearOpMode {
 
 
     }
-}
+
+
+
+
+
+
+
+    }
+*/
