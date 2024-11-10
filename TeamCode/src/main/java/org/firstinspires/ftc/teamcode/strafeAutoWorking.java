@@ -74,7 +74,7 @@ public class strafeAutoWorking extends LinearOpMode {
             frontRightMotor.setPower(1);
             backLeftMotor.setPower(1);
             backRightMotor.setPower(1);
-            sleep(3000);
+            sleep(1000);
 
             outtake.setPosition(0.9);
             telemetry.addData("running", 0);
