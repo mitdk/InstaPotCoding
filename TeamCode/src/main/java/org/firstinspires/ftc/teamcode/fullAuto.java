@@ -85,7 +85,7 @@ public class fullAuto extends LinearOpMode {
             sleep(3000);
             linSlideLeft.setTargetPosition(3900);
             outtake.setPosition(0.7);
-
+//a
             telemetry.addData("running", backLeftMotor.getPower());
             telemetry.update();
 
