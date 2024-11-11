@@ -24,7 +24,6 @@ public class strafeAuto extends LinearOpMode {
 
         TrajectoryActionBuilder BlueYellow = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-45, -60))
-                .strafeTo(new Vector2d(-45, -50))
                 .strafeTo(new Vector2d(45, -50));
         waitForStart();
         if(isStopRequested()) return;

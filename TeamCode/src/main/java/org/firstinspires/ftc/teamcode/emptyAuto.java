@@ -69,6 +69,8 @@ public class emptyAuto extends LinearOpMode {
         waitForStart();
         if(isStopRequested()) return;
         while(opModeIsActive()){
+            outtake.setPosition(0.9);
+            sleep(30000);
             telemetry.addData("running", 0);
             telemetry.update();
 

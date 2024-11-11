@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
 
@@ -198,7 +198,7 @@ public class AutoModeRedRed extends LinearOpMode {
         public DcMotorEx armLinSlide;
 
         public ArmLinearSlide(HardwareMap hardwareMap) {
-            armLinSlide = hardwareMap.get(DcMotorEx.class, "armLinSLide");
+            armLinSlide = hardwareMap.get(DcMotorEx.class, "armLinSlide");
             armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             armLinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         }
@@ -333,14 +333,8 @@ public class AutoModeRedRed extends LinearOpMode {
         if(opModeIsActive()){
             Actions.runBlocking(
                     new SequentialAction(
-                            basket1.build(),
-                            sample1.build(),
-                            basket2.build(),
-                            sample2.build(),
-                            basket3.build(),
-                            sample3.build(),
-                            basket4.build(),
-                            close.build()
+                            outtake.outtakeCollect()
+
                     )
             );
         }
@@ -360,4 +354,3 @@ public class AutoModeRedRed extends LinearOpMode {
 
 
     }
-*/

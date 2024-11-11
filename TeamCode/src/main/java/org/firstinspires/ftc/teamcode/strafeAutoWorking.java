@@ -29,18 +29,26 @@ import org.jetbrains.annotations.NotNull;
 @Autonomous(name = "StrafeAutoWorking")
 
 public class strafeAutoWorking extends LinearOpMode {
-    DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftfront");
-    DcMotor backLeftMotor = hardwareMap.dcMotor.get("rightfront");
-    DcMotor frontRightMotor = hardwareMap.dcMotor.get("leftback");
-    DcMotor backRightMotor = hardwareMap.dcMotor.get("rightback");
-    CRServo intake = hardwareMap.crservo.get("intake");
-    Servo outtake = hardwareMap.servo.get("outtake");
-    DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
-    DcMotor arm = hardwareMap.dcMotor.get("arm");
-    DcMotor linSlideLeft = hardwareMap.dcMotor.get("linSlideLeft");
-
+    public DcMotor frontLeftMotor = null;
+    public DcMotor backLeftMotor = null;
+    public DcMotor frontRightMotor = null;
+    public DcMotor backRightMotor = null;
+    public CRServo intake = null;
+    public Servo outtake = null;
+    public DcMotor armLinSlide = null;
+    public DcMotor arm = null;
+    public DcMotor linSlideLeft = null;
     @Override
     public void runOpMode() throws InterruptedException {
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftfront");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("rightfront");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("leftback");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("rightback");
+        CRServo intake = hardwareMap.crservo.get("intake");
+        Servo outtake = hardwareMap.servo.get("outtake");
+        DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
+        DcMotor arm = hardwareMap.dcMotor.get("arm");
+        DcMotor linSlideLeft = hardwareMap.dcMotor.get("linSlideLeft");
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,19 +77,42 @@ public class strafeAutoWorking extends LinearOpMode {
         waitForStart();
         if(isStopRequested()) return;
         while(opModeIsActive()){
-
-            frontLeftMotor.setPower(1);
-            frontRightMotor.setPower(1);
-            backLeftMotor.setPower(1);
-            backRightMotor.setPower(1);
-            sleep(1000);
-
-            outtake.setPosition(0.9);
-            telemetry.addData("running", 0);
-            telemetry.update();
-
-
+            forwardForDistance(10);
         }
 
     }
+
+    public void forwardForDistance (double inches) {
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int wheelDiameter = 5; // inches
+        double wheelCircumference = wheelDiameter * Math.PI;
+        double
+                rotation = inches / wheelCircumference; // number of wheel rotations you need to make
+        double ticksPerRevolution = 753.2; // ticks per revolution on the motor you are using
+        int ticks = (int) (rotation * ticksPerRevolution); // total number of motor ticks
+        frontLeftMotor.setPower(1);
+        backLeftMotor.setPower(1);
+        frontRightMotor.setPower(1);
+        backRightMotor.setPower(1);
+        frontLeftMotor.setTargetPosition(ticks);
+        backLeftMotor.setTargetPosition(ticks);
+        frontRightMotor.setTargetPosition(ticks);
+        backRightMotor.setTargetPosition(ticks);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (frontLeftMotor.isBusy() || frontLeftMotor.isBusy() || backRightMotor.isBusy() || backLeftMotor.isBusy()) {
+// empty while to stop motors from setting power = 0 below when motor is running
+            frontLeftMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backRightMotor.setPower(0);
+        }
+    }
+
 }
+

@@ -92,20 +92,22 @@ public class TeleOpMode extends LinearOpMode {
             //DRIVETRAIN
             double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x;
+            double rx = -gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx)
+            double denominator = Math.max(Math.abs
+                            (y) + Math.abs(x) + Math.abs(rx)
                     , 1);
             double frontLeftPower = (y - x + rx) / denominator;
             double backLeftPower = (y + x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower*0.8);
-            frontRightMotor.setPower(frontRightPower*0.8);
-            backRightMotor.setPower(backRightPower*0.8);
+            frontLeftMotor.setPower(frontLeftPower*0.9);
+            backLeftMotor.setPower(backLeftPower*0.9);
+            frontRightMotor.setPower(frontRightPower*0.9);
+            backRightMotor.setPower(backRightPower*0.9);
             //ARM LINEAR SLIDE
+
             double extend = gamepad2.left_stick_y;
             armLinSlide.setPower(extend/2);
 
@@ -118,6 +120,18 @@ public class TeleOpMode extends LinearOpMode {
                 armLinSlide.setPower(extend);
             }*/
             //INTAKE
+            if (gamepad1.dpad_up){
+                frontLeftMotor.setPower(0.4);
+                backLeftMotor.setPower(0.4);
+                frontRightMotor.setPower(0.4);
+                backRightMotor.setPower(0.4);
+            }
+            if (gamepad1.dpad_down){
+                frontLeftMotor.setPower(-0.4);
+                backLeftMotor.setPower(-0.4);
+                frontRightMotor.setPower(-0.4);
+                backRightMotor.setPower(-0.4);
+            }
             if (gamepad2.a) {
                 intake.setPower(0.25);
             } else if (gamepad2.x) {
@@ -145,13 +159,15 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.dpad_left) {
                 armPosition = 100 ;
 
+            } else if (gamepad2.dpad_right){
+                armPosition = 750;
             }
             double FUDGE_FACTOR = 15*19.7924893140647;
             double armPositionFudgeFactor = FUDGE_FACTOR * (gamepad2.right_trigger + (-gamepad2.left_trigger));
             //((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setPower(0.5);
+            arm.setPower(0.8);
             //OUTTAKE LINEAR SLIDE
             if (gamepad2.left_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_OFF;
@@ -159,7 +175,7 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.right_trigger > 0) {
                 linSlidePosition = LIN_SLIDE_ON;
             }
-            linSlideLeft.setPower(0.7);
+            linSlideLeft.setPower(0.3);
             linSlideLeft.setTargetPosition((int) linSlidePosition);
             linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             
