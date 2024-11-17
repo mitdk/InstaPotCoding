@@ -29,27 +29,17 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("rightfront");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("leftback");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightback");
-        CRServo intake = hardwareMap.crservo.get("intake");
-        Servo outtake = hardwareMap.servo.get("outtake");
+        Servo claw = hardwareMap.servo.get("claw");
+        Servo wrist = hardwareMap.servo.get("wrist");
         DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
-        DcMotor linSlideLeft = hardwareMap.dcMotor.get("linSlideLeft");
 
         final double ARM_TICKS_PER_DEGREE = 19.7924893140647; //exact fraction is (194481/9826)
         final double LINEAR_SLIDE_TICKS_PER_DEGREE = 19.8616161616;
         final double INTAKE_COLLECT = -1.0;
-        final double INTAKE_OFF = 0.0;
         final double INTAKE_DEPOSIT = 1;
-        final double OUTTAKE_COLLECT = 0;
-        final double OUTTAKE_DISPOSE = 1;
-        /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
-        final double ARM_COLLAPSED_INTO_ROBOT = 0;
-        final double ARM_COLLECT = -3000;
-        final double ARM_DROP = -10;
-        final double LIN_SLIDE_OFF = 0;
-        final double LIN_SLIDE_ON = 3965;
-        double armPosition = (int) ARM_COLLAPSED_INTO_ROBOT;
-        double linSlidePosition = (int) LIN_SLIDE_OFF;
+        final double WRIST_PICKUP = -1.0;
+        double armPosition = 0;
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -57,28 +47,15 @@ public class TeleOpMode extends LinearOpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        linSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        ((DcMotorEx) arm).setCurrentAlert(0.1, CurrentUnit.AMPS);
-
-
+        
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        linSlideLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        arm.setDirection(DcMotorSimple.Direction.REVERSE);
-        armLinSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        //outtake.setDirection(Servo.Direction.REVERSE);
 
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         
-        linSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linSlideLeft.setTargetPosition(0);
-        linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        
-        intake.setPower(INTAKE_OFF);
-        outtake.setPosition(0.5);
+        claw.setPosition(0);
+        wrist.setPosition(0);
 
 
         telemetry.addLine("Robot Ready.");
@@ -94,9 +71,7 @@ public class TeleOpMode extends LinearOpMode {
             double x = gamepad1.left_stick_x * 1.1;
             double rx = -gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs
-                            (y) + Math.abs(x) + Math.abs(rx)
-                    , 1);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx),1);
             double frontLeftPower = (y - x + rx) / denominator;
             double backLeftPower = (y + x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
@@ -107,19 +82,21 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower*0.9);
             backRightMotor.setPower(backRightPower*0.9);
             //ARM LINEAR SLIDE
+            armLinSlide.setTargetPosition(0);
+            armLinSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            double extend = gamepad2.left_stick_y;
-            armLinSlide.setPower(extend/2);
+            armLinSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-          /*  if (gamepad1.right_trigger > 0) {
-                double extend = gamepad2.right_trigger;
+            telemetry.addData("Position:", armLinSlide.getCurrentPosition());
+            telemetry.update();
+            if (armLinSlide.getCurrentPosition() <= 3900){
+                double extend = -gamepad2.right_stick_y;
                 armLinSlide.setPower(extend);
-            } else if (gamepad1.left_trigger > 0) {
-                double extend = gamepad2.left_trigger;
-                armLinSlide.setPower(extend);
-            }*/
-            //INTAKE
+            } else if (armLinSlide.getCurrentPosition() > 3900){
+                armLinSlide.setPower(-0.5);
+            }
+            //SLOW MOVING DRIVETRAIN
             if (gamepad1.dpad_up){
                 frontLeftMotor.setPower(0.4);
                 backLeftMotor.setPower(0.4);
@@ -132,53 +109,33 @@ public class TeleOpMode extends LinearOpMode {
                 frontRightMotor.setPower(-0.4);
                 backRightMotor.setPower(-0.4);
             }
+            //CLAW
             if (gamepad2.a) {
-                intake.setPower(0.25);
-            } else if (gamepad2.x) {
-                intake.setPower(0);
+                claw.setPosition(INTAKE_COLLECT);
             } else if (gamepad2.b) {
-                intake.setPower(-0.25);
-
-            }
-            //OUTTAKE
-            if (gamepad2.left_bumper) {
-                outtake.setPosition(0.75);
-
-
-            } else if (gamepad2.right_bumper) {
-                outtake.setPosition(1);
-
+                claw.setPosition(INTAKE_DEPOSIT);
             }
             //ARM
             if (gamepad2.dpad_up) {
+                //RESET
                 armPosition = 0;
 
             } else if (gamepad2.dpad_down) {
+                //INTAKE PARALLEL
                 armPosition = 2450;
 
             } else if (gamepad2.dpad_left) {
+                //OUTTAKE PERPENDICULAR
                 armPosition = 100 ;
 
             } else if (gamepad2.dpad_right){
+                //OUTTAKE SPECIMEN
                 armPosition = 750;
             }
-            double FUDGE_FACTOR = 15*19.7924893140647;
-            double armPositionFudgeFactor = FUDGE_FACTOR * (gamepad2.right_trigger + (-gamepad2.left_trigger));
             //((DcMotorEx) arm).setVelocity(2100);
             arm.setTargetPosition((int) armPosition);
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(0.8);
-            //OUTTAKE LINEAR SLIDE
-            if (gamepad2.left_trigger > 0) {
-                linSlidePosition = LIN_SLIDE_OFF;
-
-            } else if (gamepad2.right_trigger > 0) {
-                linSlidePosition = LIN_SLIDE_ON;
-            }
-            linSlideLeft.setPower(0.3);
-            linSlideLeft.setTargetPosition((int) linSlidePosition);
-            linSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            
             /*
             
                 */
