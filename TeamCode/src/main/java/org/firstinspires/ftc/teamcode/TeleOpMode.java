@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.arcrobotics.ftclib.controller.PController;
+import com.sun.tools.javac.tree.DCTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -32,12 +33,13 @@ public class TeleOpMode extends LinearOpMode {
         Servo claw = hardwareMap.servo.get("claw");
         Servo wrist = hardwareMap.servo.get("wrist");
         DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
-        DcMotor arm = hardwareMap.dcMotor.get("arm");
+        DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
+        DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
         final double ARM_TICKS_PER_DEGREE = 19.7924893140647; //exact fraction is (194481/9826)
         final double LINEAR_SLIDE_TICKS_PER_DEGREE = 19.8616161616;
-        final double INTAKE_COLLECT = -1.0;
-        final double INTAKE_DEPOSIT = 1;
+        final double INTAKE_COLLECT = 0.1;
+        final double INTAKE_DEPOSIT = 0.3;
         final double WRIST_PICKUP = -1.0;
         double armPosition = 0;
         // Brake code
@@ -45,16 +47,20 @@ public class TeleOpMode extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm1.setTargetPosition(0);
+        arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm2.setTargetPosition(0);
+        arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         
-        claw.setPosition(0);
+        claw.setPosition(-0.1);
         wrist.setPosition(0);
 
 
@@ -81,19 +87,18 @@ public class TeleOpMode extends LinearOpMode {
             backLeftMotor.setPower(backLeftPower*0.9);
             frontRightMotor.setPower(frontRightPower*0.9);
             backRightMotor.setPower(backRightPower*0.9);
-            //ARM LINEAR SLIDE
+
             armLinSlide.setTargetPosition(0);
             armLinSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             armLinSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
             telemetry.addData("Position:", armLinSlide.getCurrentPosition());
             telemetry.update();
-            if (armLinSlide.getCurrentPosition() <= 3900){
+            if (armLinSlide.getCurrentPosition() <= 3120){
                 double extend = -gamepad2.right_stick_y;
                 armLinSlide.setPower(extend);
-            } else if (armLinSlide.getCurrentPosition() > 3900){
+            } else if (armLinSlide.getCurrentPosition() > 3120){
                 armLinSlide.setPower(-0.5);
             }
             //SLOW MOVING DRIVETRAIN
@@ -110,39 +115,47 @@ public class TeleOpMode extends LinearOpMode {
                 backRightMotor.setPower(-0.4);
             }
             //CLAW
-            if (gamepad2.a) {
+            if (gamepad2.right_bumper) {
                 claw.setPosition(INTAKE_COLLECT);
-            } else if (gamepad2.b) {
+            } else if (gamepad2.left_bumper) {
                 claw.setPosition(INTAKE_DEPOSIT);
             }
+
+            if (gamepad2.a) {
+                wrist.setPosition(0);
+            } else if (gamepad2.b) {
+                wrist.setPosition(0.5);
+            } else if  (gamepad2.x) {
+                wrist.setPosition(0.9);
+            }
+
             //ARM
             if (gamepad2.dpad_up) {
-                //RESET
+                //RESET AND INTAKE
                 armPosition = 0;
-
-            } else if (gamepad2.dpad_down) {
-                //INTAKE PARALLEL
-                armPosition = 2450;
 
             } else if (gamepad2.dpad_left) {
                 //OUTTAKE PERPENDICULAR
-                armPosition = 100 ;
+                armPosition = 900 ;
 
             } else if (gamepad2.dpad_right){
                 //OUTTAKE SPECIMEN
-                armPosition = 750;
+                armPosition = 450;
             }
-            //((DcMotorEx) arm).setVelocity(2100);
-            arm.setTargetPosition((int) armPosition);
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setPower(0.8);
+            ((DcMotorEx) arm1).setVelocity(2100);
+            ((DcMotorEx) arm2).setVelocity(2100);
+            arm1.setTargetPosition((int) armPosition);
+            arm2.setTargetPosition((int) armPosition);
+            arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             /*
             
                 */
             //PID STUFF
-            telemetry.addData("armTarget: ", arm.getTargetPosition());
-            telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
-            telemetry.update();
+            //telemetry.addData("armTarget: ", arm.getTargetPosition());
+            //telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
+            //telemetry.update();
         }
 
     }

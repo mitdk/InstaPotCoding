@@ -1,147 +1,91 @@
 package org.firstinspires.ftc.teamcode;
 
+// RR-specific imports
 import androidx.annotation.NonNull;
 
-// RR-specific imports
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.dashboard.config.Config;
 
 // Non-RR imports
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.CRServo;
 
-import org.jetbrains.annotations.NotNull;
+@Config
+@Autonomous(name = "AutoBlueBlue")
 
 
-@Autonomous(name = "AutoMode")
-
-public class AutoBlueBlue extends LinearOpMode{
-    public class Arm {
-        private DcMotorEx Arm_1;
-        private DcMotorEx Arm_2;
-        public Arm(HardwareMap hardwareMap) {
-            Arm_1 = hardwareMap.get(DcMotorEx.class, "arm1");
-            Arm_1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            Arm_1.setTargetPosition(0);
-            Arm_1.setVelocity(2100);
-            Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            Arm_2 = hardwareMap.get(DcMotorEx.class, "arm2");
-            Arm_2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            Arm_2.setTargetPosition(0);
-            Arm_2.setVelocity(2100);
-            Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        public class ArmCollect implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm_1.setTargetPosition(100); //Just a placeholder number
-                Arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                Arm_2.setTargetPosition(100); //Just a placeholder number
-                Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                return false;
-            }
-        }
-        public Action armCollect() {
-            return new ArmCollect();
-        }
-
-        public class ArmVertical implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm_1.setTargetPosition(0); //Just a placeholder number
-                Arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                Arm_2.setTargetPosition(0); //Just a placeholder number
-                Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                return false;
-            }
-        }
-        public Action armVertical() {
-            return new ArmVertical();
-        }
-
-        public class ArmPreSpec implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm_1.setTargetPosition(50); //Just a placeholder number
-                Arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                Arm_2.setTargetPosition(50); //Just a placeholder number
-                Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                return false;
-            }
-        }
-        public Action armPreSpec() {
-            return new ArmPreSpec();
-        }
-
-        public class ArmPostSpec implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                Arm_1.setTargetPosition(80); //Just a placeholder number
-                Arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                Arm_2.setTargetPosition(80); //Just a placeholder number
-                Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                return false;
-            }
-        }
-        public Action armPostSpec() {
-            return new ArmPostSpec();
-        }
-
-    }
-
-    public class LinSlide {
-        public DcMotorEx LinSlide;
-        public LinSlide(HardwareMap hardwareMap){
-            LinSlide = hardwareMap.get(DcMotorEx.class, "linSlide");
-            LinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            LinSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
-
-        public class LinSlideMove implements Action{
-            private boolean initialized = false;
+public class AutoBlueBlue extends LinearOpMode {
 
 
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-
-                }
-                double pos = LinSlide.getCurrentPosition();
-                packet.put("liftPos", pos);
-                if (pos < 3965) {
-
-                } else {
-                    LinSlide.setPower(0);
-                    return false;
-                }
-                return false;
-            }
-        }
-        public Action linSlideUp() {
-            return new LinSlideMove();
-        }
-    }
     @Override
     public void runOpMode() throws InterruptedException {
+        Pose2d initialPose = new Pose2d(-11.8, -61.7, Math.toRadians(90));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
+
+        TrajectoryActionBuilder BlueYellow = drive.actionBuilder(initialPose)
+                .splineToLinearHeading(new Pose2d(-56, -63, Math.toRadians(51)), Math.toRadians(180))
+                .strafeToConstantHeading(new Vector2d(-56.25, -65.15))
+                .waitSeconds(1)
+                //Brings robot to second sample block, the middle one of the 3 outside the sub
+                .strafeToLinearHeading(new Vector2d(-44.7, -56.8), Math.toRadians(77))
+              /*  //Intakes 2nd sample block
+                .waitSeconds(1)
+                //Travel to basket
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                //Deposits 2nd sample block
+                .waitSeconds(1)
+                //goes to 3rd sample
+                .strafeToLinearHeading(new Vector2d(-36.7, -25.8), Math.toRadians(180))
+                .lineToX(10)
+                //Intakes 3rd sample block
+                .waitSeconds(1)
+                //Travel to basket
+                .lineToX(-10)
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
+                //Deposits 3rd sample block
+
+                //Goes to submersible to pick up 4th sample
+                //.lineToLinearHeading(new Pose2d(-56.4,-18.4,Math.toRadians(0)))
+                // .splineToLinearHeading(new Pose2d(-25.8, -6.8, 0), Math.toRadians(-90))
+           */     //Intakes 4th sample block
+                .waitSeconds(26);
+
+        waitForStart();
+        if(isStopRequested()) return;
+        while(opModeIsActive()){
+            Actions.runBlocking(
+                    new SequentialAction(
+                            BlueYellow.build()
+
+
+
+
+
+
+
+
+
+
+                    )
+            );
+        }
+
+
+
+
+
+
 
     }
 }
