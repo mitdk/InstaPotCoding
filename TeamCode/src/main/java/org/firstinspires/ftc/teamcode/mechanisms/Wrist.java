@@ -34,17 +34,6 @@ public class Wrist {
     public Action wristSpecimen() {
         return new WristSpecimen();
     }
-    public class WristTucked implements Action {
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0.9);
-            return false;
-        }
-    }
-    public Action wristTucked() {
-        return new WristTucked();
-    }
     public class WristFlatout implements Action {
 
         @Override

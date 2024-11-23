@@ -65,7 +65,7 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm2.setTargetPosition(0);
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        
+
         claw.setPosition(-0.1);
         wrist.setPosition(0);
 
@@ -83,16 +83,16 @@ public class TeleOpMode extends LinearOpMode {
             double x = -gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx),1);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = (y - x + rx) / denominator;
             double backLeftPower = (y + x - rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x + rx) / denominator;
 
-            frontLeftMotor.setPower(frontLeftPower*0.9);
-            backLeftMotor.setPower(backLeftPower*0.9);
-            frontRightMotor.setPower(frontRightPower*0.9);
-            backRightMotor.setPower(backRightPower*0.9);
+            frontLeftMotor.setPower(frontLeftPower * 0.9);
+            backLeftMotor.setPower(backLeftPower * 0.9);
+            frontRightMotor.setPower(frontRightPower * 0.9);
+            backRightMotor.setPower(backRightPower * 0.9);
 
 
             armLinSlide.setTargetPosition(0);
@@ -102,20 +102,20 @@ public class TeleOpMode extends LinearOpMode {
 
             telemetry.addData("Position:", armLinSlide.getCurrentPosition());
             telemetry.update();
-            if (armLinSlide.getCurrentPosition() <= 3120){
+            if (armLinSlide.getCurrentPosition() <= 3120) {
                 double extend = -gamepad2.right_stick_y;
                 armLinSlide.setPower(extend);
-            } else if (armLinSlide.getCurrentPosition() > 3120){
+            } else if (armLinSlide.getCurrentPosition() > 3120) {
                 armLinSlide.setPower(-0.5);
             }
             //SLOW MOVING DRIVETRAIN
-            if (gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 frontLeftMotor.setPower(0.4);
                 backLeftMotor.setPower(0.4);
                 frontRightMotor.setPower(0.4);
                 backRightMotor.setPower(0.4);
             }
-            if (gamepad1.dpad_down){
+            if (gamepad1.dpad_down) {
                 frontLeftMotor.setPower(-0.4);
                 backLeftMotor.setPower(-0.4);
                 frontRightMotor.setPower(-0.4);
@@ -140,28 +140,41 @@ public class TeleOpMode extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 //RESET AND INTAKE
                 armPosition = 0;
+                ((DcMotorEx) arm1).setVelocity(250);
+                ((DcMotorEx) arm2).setVelocity(250);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             } else if (gamepad2.dpad_up) {
                 //OUTTAKE PERPENDICULAR
-                armPosition = 450 ;
+                armPosition = 450;
+                ((DcMotorEx) arm1).setVelocity(500);
+                ((DcMotorEx) arm2).setVelocity(500);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             } else if (gamepad2.dpad_right) {
-                armPosition = 375;
+                armPosition = 200;
+                ((DcMotorEx) arm1).setVelocity(500);
+                ((DcMotorEx) arm2).setVelocity(500);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            }
-            ((DcMotorEx) arm1).setVelocity(500);
-            ((DcMotorEx) arm2).setVelocity(500);
-            arm1.setTargetPosition((int) armPosition);
-            arm2.setTargetPosition((int) armPosition);
-            arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             /*
-            
-                */
+
+             */
             //PID STUFF
             //telemetry.addData("armTarget: ", arm.getTargetPosition());
             //telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
             //telemetry.update();
         }
 
-    }
+    }}

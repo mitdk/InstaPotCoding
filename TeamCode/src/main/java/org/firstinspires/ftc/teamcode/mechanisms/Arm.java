@@ -59,9 +59,9 @@ public class Arm {
             double armpos2 = Arm_2.getCurrentPosition();
             packet.put("armPos1", armpos1);
             packet.put("armPos2", armpos2);
-            if (armpos1 < 825) {
+            if (armpos1 < 450 || armpos2 < 450) {
                 return true;
-            } else if (armpos2 < 825) {
+            } else if (armpos2 == 450 || armpos1 == 450) {
                 return true;
             } else {
                 Arm_1.setPower(0);
@@ -92,9 +92,9 @@ public class Arm {
             double armpos2 = Arm_2.getCurrentPosition();
             packet.put("armPos1", armpos1);
             packet.put("armPos2", armpos2);
-            if (armpos1 > 0) {
+            if (armpos1 > 0 || armpos2 > 0) {
                 return true;
-            } else if (armpos2 > 0) {
+            } else if (armpos2 == 0 || armpos1 == 0) {
                 return true;
             } else {
                 Arm_1.setPower(0);
