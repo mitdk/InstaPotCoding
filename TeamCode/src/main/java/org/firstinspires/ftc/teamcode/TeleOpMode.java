@@ -36,11 +36,11 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
-        final double INTAKE_COLLECT = 0.0;
-        final double INTAKE_DEPOSIT = 0.2;
-        final double WRIST_PICKUP = 0.65;
-        final double WRIST_SPECIMEN = 0;
-        final double WRIST_FLATOUT = 0.35;
+        final double ARM_TICKS_PER_DEGREE = 19.7924893140647; //exact fraction is (194481/9826)
+        final double LINEAR_SLIDE_TICKS_PER_DEGREE = 19.8616161616;
+        final double INTAKE_COLLECT = 0.1;
+        final double INTAKE_DEPOSIT = 0.3;
+        final double WRIST_PICKUP = -1.0;
         double armPosition = 0;
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -50,14 +50,8 @@ public class TeleOpMode extends LinearOpMode {
         arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm1.setDirection(DcMotorSimple.Direction.REVERSE);
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        armLinSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm1.setTargetPosition(0);
@@ -79,21 +73,20 @@ public class TeleOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             //DRIVETRAIN
-            double y = -gamepad1.left_stick_y;
-            double x = -gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x;
+            double y = gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x * 1.1;
+            double rx = -gamepad1.right_stick_x;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx),1);
             double frontLeftPower = (y - x + rx) / denominator;
-            double backLeftPower = (y + x - rx) / denominator;
+            double backLeftPower = (y + x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x + rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
 
             frontLeftMotor.setPower(frontLeftPower*0.9);
             backLeftMotor.setPower(backLeftPower*0.9);
             frontRightMotor.setPower(frontRightPower*0.9);
             backRightMotor.setPower(backRightPower*0.9);
-
 
             armLinSlide.setTargetPosition(0);
             armLinSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -122,34 +115,35 @@ public class TeleOpMode extends LinearOpMode {
                 backRightMotor.setPower(-0.4);
             }
             //CLAW
-            if (gamepad2.left_bumper) {
+            if (gamepad2.right_bumper) {
                 claw.setPosition(INTAKE_COLLECT);
-            } else if (gamepad2.right_bumper) {
+            } else if (gamepad2.left_bumper) {
                 claw.setPosition(INTAKE_DEPOSIT);
             }
 
             if (gamepad2.a) {
-                wrist.setPosition(WRIST_SPECIMEN);
+                wrist.setPosition(0);
             } else if (gamepad2.b) {
-                wrist.setPosition(WRIST_PICKUP);
-            } else if (gamepad2.y) {
-                wrist.setPosition(WRIST_FLATOUT);
+                wrist.setPosition(0.5);
+            } else if  (gamepad2.x) {
+                wrist.setPosition(0.9);
             }
 
             //ARM
-            if (gamepad2.dpad_down) {
+            if (gamepad2.dpad_up) {
                 //RESET AND INTAKE
                 armPosition = 0;
 
-            } else if (gamepad2.dpad_up) {
+            } else if (gamepad2.dpad_left) {
                 //OUTTAKE PERPENDICULAR
-                armPosition = 450 ;
-            } else if (gamepad2.dpad_right) {
-                armPosition = 375;
+                armPosition = 900 ;
+
+            } else if (gamepad2.dpad_right){
+                //OUTTAKE SPECIMEN
+                armPosition = 450;
             }
-            }
-            ((DcMotorEx) arm1).setVelocity(500);
-            ((DcMotorEx) arm2).setVelocity(500);
+            ((DcMotorEx) arm1).setVelocity(2100);
+            ((DcMotorEx) arm2).setVelocity(2100);
             arm1.setTargetPosition((int) armPosition);
             arm2.setTargetPosition((int) armPosition);
             arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -165,3 +159,4 @@ public class TeleOpMode extends LinearOpMode {
         }
 
     }
+}
