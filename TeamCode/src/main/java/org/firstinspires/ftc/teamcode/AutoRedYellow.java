@@ -36,7 +36,7 @@ public class AutoRedYellow extends LinearOpMode{
         Wrist wrist = new Wrist(hardwareMap);
 
 
-        TrajectoryActionBuilder BlueYellow = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder RedYellow = drive.actionBuilder(initialPose)
                 //DRIVE TO BASKET FOR SAMPLE 1
                 .strafeToLinearHeading(new Vector2d(-55, -55), Math.toRadians(45))
                 .waitSeconds(2)
@@ -63,7 +63,7 @@ public class AutoRedYellow extends LinearOpMode{
         while(opModeIsActive()){
             Actions.runBlocking(
                     new SequentialAction(
-                            BlueYellow.build()
+                            RedYellow.build()
                     )
             );
         }

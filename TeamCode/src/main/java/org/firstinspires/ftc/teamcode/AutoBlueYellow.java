@@ -37,21 +37,28 @@ public class AutoBlueYellow extends LinearOpMode{
         Wrist wrist = new Wrist(hardwareMap);
 
 
-        TrajectoryActionBuilder BlueYellowFullTraj = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder samp1 = drive.actionBuilder(initialPose)
                 //DRIVE TO BASKET FOR SAMPLE 1
                 .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
+                .afterTime(0, arm.armPerp())
+                .afterTime(0, wrist.wristSpecimen())
+                .afterTime(1, linslide.lsOut())
+                .stopAndAdd(claw.clawOpen());
+        TrajectoryActionBuilder samp2 = drive.actionBuilder(new Pose2d(55, 55, 225))
                 //DRIVE TO NEXT SAMPLE FOR SAMPLE 2 INTAKE
                 .strafeToLinearHeading(new Vector2d(46.7, 44.5),Math.toRadians(-90))
                 .waitSeconds(2)
                 //DRIVE TO BASKET FOR SAMPLE 2
                 .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
-                .waitSeconds(2)
+                .waitSeconds(2);
+        TrajectoryActionBuilder samp3 = drive.actionBuilder((new Pose2d(55,55,225)))
                 //DRIVE TO NEXT SAMPLE FOR SAMPLE 3 INTAKE
                 .strafeToLinearHeading(new Vector2d(58.1, 44.5), Math.toRadians(-90))
                 .waitSeconds(2)
                 //DRIVE TO BASKET FOR SAMPLE 3
                 .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
-                .waitSeconds(2)
+                .waitSeconds(2);
+        TrajectoryActionBuilder samp4 = drive.actionBuilder((new Pose2d(55,55,225)))
                 //DRIVE TO NEXT SAMPLE FOR SAMPLE 4
                 .strafeToLinearHeading(new Vector2d(58.1, 44.5), Math.toRadians(-60))
                 .waitSeconds(2)
