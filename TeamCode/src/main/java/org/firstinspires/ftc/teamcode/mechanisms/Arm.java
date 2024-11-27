@@ -15,11 +15,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.mechanisms.Claw;
-import org.firstinspires.ftc.teamcode.mechanisms.LinSlide;
+
 import org.firstinspires.ftc.teamcode.mechanisms.Wrist;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -39,6 +39,8 @@ public class Arm {
         Arm_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Arm_2.setTargetPosition(0);
         Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Arm_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        Arm_2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public class ArmPerpendicular implements Action {
         // checks if the lift motor has been powered on
@@ -48,26 +50,32 @@ public class Arm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
-            if (!initialized) {
-                Arm_1.setPower(0.5);
-                Arm_2.setPower(0.5);
-                initialized = true;
-            }
+
+
+
+
+
 
             // checks lift's current position
             double armpos1 = Arm_1.getCurrentPosition();
             double armpos2 = Arm_2.getCurrentPosition();
             packet.put("armPos1", armpos1);
             packet.put("armPos2", armpos2);
-            if (armpos1 < 450 || armpos2 < 450) {
-                return true;
-            } else if (armpos2 == 450 || armpos1 == 450) {
-                return true;
-            } else {
-                Arm_1.setPower(0);
-                Arm_2.setPower(0);
+            if (armpos1 < 1400 || armpos2 < 1400) {
+                Arm_1.setTargetPosition(1400);
+                Arm_2.setTargetPosition(1400);
+                Arm_1.setVelocity(1000);
+                Arm_2.setVelocity(1000);
+                Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
+
+
+
+
+
             }
+            return false;
         }
     }
     public Action armPerp() {
@@ -81,26 +89,23 @@ public class Arm {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
-            if (!initialized) {
-                Arm_1.setPower(-0.5);
-                Arm_2.setPower(-0.5);
-                initialized = true;
-            }
-
-            // checks lift's current position
             double armpos1 = Arm_1.getCurrentPosition();
             double armpos2 = Arm_2.getCurrentPosition();
             packet.put("armPos1", armpos1);
             packet.put("armPos2", armpos2);
             if (armpos1 > 0 || armpos2 > 0) {
-                return true;
-            } else if (armpos2 == 0 || armpos1 == 0) {
-                return true;
-            } else {
-                Arm_1.setPower(0);
-                Arm_2.setPower(0);
+                Arm_1.setTargetPosition(0);
+                Arm_2.setTargetPosition(0);
+                Arm_1.setVelocity(1500);
+                Arm_2.setVelocity(1500);
+                Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
+
+
             }
+            return false;
+
         }
     }
     public Action armPar(){

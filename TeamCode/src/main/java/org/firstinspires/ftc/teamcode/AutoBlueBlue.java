@@ -7,7 +7,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 
 // Non-RR imports
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -25,12 +24,12 @@ import org.firstinspires.ftc.teamcode.mechanisms.LinSlide;
 import org.firstinspires.ftc.teamcode.mechanisms.Wrist;
 
 
-@Autonomous(name = "AutoBlueYellow")
+@Autonomous(name = "AutoBlueBlue")
 
-public class AutoBlueYellow extends LinearOpMode{
+public class AutoBlueBlue extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-11.8, -61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(11.8, -61.7, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Arm arm = new Arm(hardwareMap);
         LinSlide linslide = new LinSlide(hardwareMap);
@@ -38,32 +37,32 @@ public class AutoBlueYellow extends LinearOpMode{
         Wrist wrist = new Wrist(hardwareMap);
 
 
-        TrajectoryActionBuilder BlueYellowFullTraj = drive.actionBuilder(initialPose)
-                //DRIVE TO BASKET FOR SAMPLE 1
-                .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
-                //DRIVE TO NEXT SAMPLE FOR SAMPLE 2 INTAKE
-                .strafeToLinearHeading(new Vector2d(46.7, 44.5),Math.toRadians(-90))
+        TrajectoryActionBuilder RedYellow = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(new Vector2d(0, -33), Math.toRadians(270))
                 .waitSeconds(2)
-                //DRIVE TO BASKET FOR SAMPLE 2
-                .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
+                //SPECI 2 PICKUP
+                .strafeToLinearHeading(new Vector2d(30, -56.8), Math.toRadians(0))
                 .waitSeconds(2)
-                //DRIVE TO NEXT SAMPLE FOR SAMPLE 3 INTAKE
-                .strafeToLinearHeading(new Vector2d(58.1, 44.5), Math.toRadians(-90))
+                //SPECI 2
+                .strafeToLinearHeading(new Vector2d(4, -33), Math.toRadians(270))
                 .waitSeconds(2)
-                //DRIVE TO BASKET FOR SAMPLE 3
-                .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225))
+                //SPECI 3 PICKUP
+                .splineToLinearHeading(new Pose2d(48.6, -45.2, Math.toRadians(90)), Math.toRadians(0))
                 .waitSeconds(2)
-                //DRIVE TO NEXT SAMPLE FOR SAMPLE 4
-                .strafeToLinearHeading(new Vector2d(58.1, 44.5), Math.toRadians(-60))
+                //SPECI 3 DROPOFF AT HP ZONE
+                .turn(Math.toRadians(180))
+                .waitSeconds(5)
+                //SPECI 3
+                .strafeToConstantHeading(new Vector2d(6, -33))
                 .waitSeconds(2)
-                //DRIVE TO BASKET FOR SAMPLE 4
-                .strafeToLinearHeading(new Vector2d(55, 55), Math.toRadians(225));
+                //PARK
+                .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(180));
         waitForStart();
         if(isStopRequested()) return;
         while(opModeIsActive()){
             Actions.runBlocking(
                     new SequentialAction(
-
+                            RedYellow.build()
                     )
             );
         }
