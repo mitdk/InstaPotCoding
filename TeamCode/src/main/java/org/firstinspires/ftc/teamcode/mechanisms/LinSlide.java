@@ -27,7 +27,7 @@ public class LinSlide {
 
 
     public LinSlide(HardwareMap hardwareMap) {
-        linSlide = hardwareMap.get(DcMotorEx.class, "arm1");
+        linSlide = hardwareMap.get(DcMotorEx.class, "armLinSlide");
         linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linSlide.setTargetPosition(0);
@@ -41,20 +41,17 @@ public class LinSlide {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
-            if (!initialized) {
-                linSlide.setPower(0.5);
-                initialized = true;
-            }
+            if (linSlide.getCurrentPosition() < 3120) {
+                linSlide.setTargetPosition(3120);
 
-            // checks lift's current position
-            double linSlidePos = linSlide.getCurrentPosition();
-            packet.put("linSlidePos", linSlidePos);
-            if (linSlidePos < 3965) {
-                return true;
-            } else {
-                linSlide.setPower(0);
+                linSlide.setVelocity(1500);
+
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
                 return false;
+
             }
+            return false;
         }
     }
     public Action lsOut() {
@@ -68,20 +65,17 @@ public class LinSlide {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
-            if (!initialized) {
-                linSlide.setPower(-0.5);
-                initialized = true;
-            }
+            if (linSlide.getCurrentPosition() >0) {
+                linSlide.setTargetPosition(0);
 
-            // checks lift's current position
-            double linSlidePos = linSlide.getCurrentPosition();
-            packet.put("linSlidePos", linSlidePos);
-            if (linSlidePos > 0) {
-                return true;
-            } else {
-                linSlide.setPower(0);
+                linSlide.setVelocity(1500);
+
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
                 return false;
+
             }
+            return false;
         }
     }
     public Action lsIn(){
