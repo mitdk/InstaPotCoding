@@ -61,11 +61,12 @@ public class Arm {
             double armpos2 = Arm_2.getCurrentPosition();
             packet.put("armPos1", armpos1);
             packet.put("armPos2", armpos2);
-            if (armpos1 < 1400 || armpos2 < 1400) {
+
+            if (armpos1 < 3000 || armpos2 < 3000) {
                 Arm_1.setTargetPosition(1400);
                 Arm_2.setTargetPosition(1400);
-                Arm_1.setVelocity(1000);
-                Arm_2.setVelocity(1000);
+                Arm_1.setVelocity(2000);
+                Arm_2.setVelocity(2000);
                 Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
@@ -96,8 +97,8 @@ public class Arm {
             if (armpos1 > 0 || armpos2 > 0) {
                 Arm_1.setTargetPosition(0);
                 Arm_2.setTargetPosition(0);
-                Arm_1.setVelocity(1500);
-                Arm_2.setVelocity(1500);
+                Arm_1.setVelocity(500);
+                Arm_2.setVelocity(500);
                 Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;
@@ -107,9 +108,33 @@ public class Arm {
             return false;
 
         }
+
     }
+    public class ArmAscent implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            double armpos1 = Arm_1.getCurrentPosition();
+            double armpos2 = Arm_2.getCurrentPosition();
+            if(armpos1>0 || armpos2>0){
+                Arm_1.setTargetPosition(620);
+                Arm_2.setTargetPosition(620);
+                Arm_1.setVelocity(1250);
+                Arm_2.setVelocity(1250);
+                Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                return false;
+            }
+            return false;
+        }
+    }
+    public Action armAscent(){
+        return new ArmAscent();
+    }
+
+
     public Action armPar(){
         return new ArmParallel();
     }
+
 }
 

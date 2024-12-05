@@ -15,6 +15,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -32,6 +33,7 @@ public class LinSlide {
         linSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linSlide.setTargetPosition(0);
         linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linSlide.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public class LinSlideOut implements Action {
         // checks if the lift motor has been powered on
@@ -42,10 +44,8 @@ public class LinSlide {
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
             if (linSlide.getCurrentPosition() < 3120) {
+                linSlide.setVelocity(2000);
                 linSlide.setTargetPosition(3120);
-
-                linSlide.setVelocity(1500);
-
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 return false;
@@ -64,11 +64,54 @@ public class LinSlide {
         // actions are formatted via telemetry packets as below
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            packet.put("linslide", linSlide.getCurrentPosition());
             // powers on motor, if it is not on
-            if (linSlide.getCurrentPosition() >0) {
-                linSlide.setTargetPosition(0);
+            if (linSlide.getCurrentPosition()<4000) {
 
-                linSlide.setVelocity(1500);
+
+                linSlide.setVelocity(2000);
+                linSlide.setTargetPosition(0);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                return false;
+
+            }
+            return false;
+        }
+    }
+    public class LinSlideCollect implements Action {
+        // checks if the lift motor has been powered on
+        private boolean initialized = false;
+
+        // actions are formatted via telemetry packets as below
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // powers on motor, if it is not on
+            if (linSlide.getCurrentPosition()<4000) {
+                linSlide.setTargetPosition(1400);
+
+                linSlide.setVelocity(2000);
+
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                return false;
+
+            }
+            return false;
+        }
+    }
+    public class LinSlideSpecimenCollect implements Action {
+        // checks if the lift motor has been powered on
+        private boolean initialized = false;
+
+        // actions are formatted via telemetry packets as below
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            // powers on motor, if it is not on
+            if (linSlide.getCurrentPosition()<4000) {
+                linSlide.setTargetPosition(1200);
+
+                linSlide.setVelocity(2000);
 
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -80,6 +123,12 @@ public class LinSlide {
     }
     public Action lsIn(){
         return new LinSlideIn();
+    }
+    public Action lsCollect(){
+        return new LinSlideCollect();
+    }
+    public Action lsSpeciCollect(){
+        return new LinSlideSpecimenCollect();
     }
 }
 
