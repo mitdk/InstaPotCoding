@@ -41,7 +41,7 @@ public class TeleOpMode extends LinearOpMode {
         final double WRIST_PICKUP = 0.65;
         final double WRIST_SPECIMEN = 0.925;
         final double WRIST_FLATOUT = 0.32;
-        double armPosition = 0;
+        double armPosition = 0; //a
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
