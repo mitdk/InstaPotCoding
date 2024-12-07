@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.LinSlide;
 import org.firstinspires.ftc.teamcode.mechanisms.Wrist;
 
 
-@Autonomous(name = "AutoSpecimen")
+@Autonomous(name = "AutoSpecimenAlt")
 
 public class AutoSpecimenAlt extends LinearOpMode{
     @Override
@@ -39,7 +39,7 @@ public class AutoSpecimenAlt extends LinearOpMode{
                 .afterTime(0, claw.clawOpen())
                 .afterTime(0, arm.armPar())
                 //SPECIS 2 AND 3 PICKUP
-                .splineToConstantHeading(new Vector2d(47.4, -8.5),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(57.4, -8.5),Math.toRadians(0))
                 .strafeTo(new Vector2d(47.4, -48.5))
                 .splineToConstantHeading(new Vector2d(55, -8.5), Math.toRadians(0))
                 .strafeTo(new Vector2d(55, -48.5))

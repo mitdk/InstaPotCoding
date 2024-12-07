@@ -36,8 +36,8 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
-        final double INTAKE_DEPOSIT = -0.5;
-        final double INTAKE_COLLECT = -0.3;
+        final double INTAKE_DEPOSIT = 0;
+        final double INTAKE_COLLECT = 0;
         final double WRIST_PICKUP = 0.65;
         final double WRIST_SPECIMEN = 0.925;
         final double WRIST_FLATOUT = 0.32;
