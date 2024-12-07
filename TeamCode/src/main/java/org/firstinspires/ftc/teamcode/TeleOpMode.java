@@ -36,10 +36,10 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
-        final double INTAKE_DEPOSIT = 0.48;
-        final double INTAKE_COLLECT = 0.58;
+        final double INTAKE_DEPOSIT = -0.5;
+        final double INTAKE_COLLECT = -0.3;
         final double WRIST_PICKUP = 0.65;
-        final double WRIST_SPECIMEN = 0;
+        final double WRIST_SPECIMEN = 0.925;
         final double WRIST_FLATOUT = 0.32;
         double armPosition = 0;
         // Brake code
@@ -67,7 +67,7 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         claw.setPosition(INTAKE_COLLECT);
-        wrist.setPosition(0.8);
+        wrist.setPosition(0.5);
 
 
         telemetry.addLine("Robot Ready.");
@@ -80,8 +80,8 @@ public class TeleOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             //DRIVETRAIN
             double y = -gamepad1.left_stick_y;
-            double x = -gamepad1.right_stick_x * 1.1;
-            double rx = gamepad1.left_stick_x;
+            double x = -gamepad1.right_stick_x;
+            double rx = gamepad1.left_stick_x * 1.1;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = (y - x + rx) / denominator;
