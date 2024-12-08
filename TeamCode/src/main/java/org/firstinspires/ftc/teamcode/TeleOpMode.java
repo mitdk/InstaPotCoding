@@ -36,11 +36,11 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
-        final double INTAKE_DEPOSIT = -0.5;
-        final double INTAKE_COLLECT = -0.3;
-        final double WRIST_PICKUP = 0.65;
-        final double WRIST_SPECIMEN = 0.925;
-        final double WRIST_FLATOUT = 0.32;
+        final double INTAKE_DEPOSIT = 0.2;
+        final double INTAKE_COLLECT = 0.05;
+        final double WRIST_PICKUP = 0.675;
+        final double WRIST_SPECIMEN = 0;
+        final double WRIST_FLATOUT = 0.3;
         double armPosition = 0; //a
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -67,7 +67,7 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         claw.setPosition(INTAKE_COLLECT);
-        wrist.setPosition(0.5);
+        wrist.setPosition(WRIST_SPECIMEN);
 
 
         telemetry.addLine("Robot Ready.");
@@ -111,18 +111,18 @@ public class TeleOpMode extends LinearOpMode {
 
             //CLAW
             if (gamepad2.left_bumper) {
-                claw.setPosition(INTAKE_COLLECT -0.5);
-                claw.setPosition(INTAKE_COLLECT);
-            } else if (gamepad2.right_bumper) {
+
                 claw.setPosition(INTAKE_DEPOSIT);
+            } else if (gamepad2.right_bumper) {
+                claw.setPosition(INTAKE_COLLECT);
             }
 
 
-            if (gamepad2.a) {
+            if (gamepad2.y) {
                 wrist.setPosition(WRIST_SPECIMEN);
-            } else if (gamepad2.b) {
+            } else if (gamepad2.a) {
                 wrist.setPosition(WRIST_PICKUP);
-            } else if (gamepad2.y) {
+            } else if (gamepad2.b) {
                 wrist.setPosition(WRIST_FLATOUT);
             }
 
