@@ -32,8 +32,8 @@ public class AutoSample extends LinearOpMode{
 
         TrajectoryActionBuilder RedYellow = drive.actionBuilder(initialPose)
                 //DRIVE TO BASKET FOR SAMPLE 1
-
-
+                .afterTime(0,claw.clawClose())
+                .afterTime(0, wrist.wristFlatout())
                 .afterTime(0, arm.armPerp())
                 .afterTime(0,linslide.lsOut())
                 .strafeToLinearHeading(new Vector2d(-59.9, -57.3), Math.toRadians(45))
