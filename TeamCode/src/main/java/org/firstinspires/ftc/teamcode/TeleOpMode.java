@@ -38,8 +38,8 @@ public class TeleOpMode extends LinearOpMode {
 
         final double INTAKE_DEPOSIT = 0.2;
         final double INTAKE_COLLECT = 0.05;
-        final double WRIST_PICKUP = 0.675;
-        final double WRIST_SPECIMEN = 0;
+        final double WRIST_PICKUP = 0;
+        final double WRIST_SPECIMEN = 0.7;
         final double WRIST_FLATOUT = 0.3;
         double armPosition = 0; //a
         // Brake code
@@ -59,6 +59,7 @@ public class TeleOpMode extends LinearOpMode {
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
+
         arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm1.setTargetPosition(0);
         arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -66,8 +67,8 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setTargetPosition(0);
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        claw.setPosition(INTAKE_COLLECT);
-        wrist.setPosition(WRIST_SPECIMEN);
+        claw.setPosition(INTAKE_DEPOSIT);
+        wrist.setPosition(WRIST_PICKUP);
 
 
         telemetry.addLine("Robot Ready.");
@@ -102,12 +103,18 @@ public class TeleOpMode extends LinearOpMode {
 
             telemetry.addData("Position:", armLinSlide.getCurrentPosition());
             telemetry.update();
-            if (armLinSlide.getCurrentPosition() <= 3120) {
+            if ((arm1.getCurrentPosition() & arm2.getCurrentPosition()) < 400) {
+                if (armLinSlide.getCurrentPosition() <= 2150) {
+                    double extend = -gamepad2.right_stick_y;
+                    armLinSlide.setPower(extend);
+                } else if (armLinSlide.getCurrentPosition() > 2150) {
+                    armLinSlide.setPower(-0.5);
+                }
+            } else {
                 double extend = -gamepad2.right_stick_y;
                 armLinSlide.setPower(extend);
-            } else if (armLinSlide.getCurrentPosition() > 3120) {
-                armLinSlide.setPower(-0.5);
             }
+
 
             //CLAW
             if (gamepad2.left_bumper) {
@@ -118,9 +125,9 @@ public class TeleOpMode extends LinearOpMode {
             }
 
 
-            if (gamepad2.y) {
+            if (gamepad2.a) {
                 wrist.setPosition(WRIST_SPECIMEN);
-            } else if (gamepad2.a) {
+            } else if (gamepad2.y) {
                 wrist.setPosition(WRIST_PICKUP);
             } else if (gamepad2.b) {
                 wrist.setPosition(WRIST_FLATOUT);
@@ -130,8 +137,8 @@ public class TeleOpMode extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 //RESET AND INTAKE
                 armPosition = 0;
-                ((DcMotorEx) arm1).setVelocity(1500);
-                ((DcMotorEx) arm2).setVelocity(1500);
+                ((DcMotorEx) arm1).setVelocity(1450);
+                ((DcMotorEx) arm2).setVelocity(1450);
                 arm1.setTargetPosition((int) armPosition);
                 arm2.setTargetPosition((int) armPosition);
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
