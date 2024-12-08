@@ -75,10 +75,11 @@ public class AutoSpecimen extends LinearOpMode{
                 .afterTime(0,linslide.lsIn())
                 .afterTime(0, wrist.wristSpecimen())
                 .afterTime(0, arm.armPerp())
-                .strafeToLinearHeading(new Vector2d(5, -37.5),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(7, -37.5),Math.toRadians(-90))
                 .afterTime(0, linslide.lsCollect())
+                .waitSeconds(1)
                 .afterTime(1, claw.clawOpen())
-                .waitSeconds(2)
+                .waitSeconds(1)
                 //PARK
                 .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(270))
                         .waitSeconds(30);
