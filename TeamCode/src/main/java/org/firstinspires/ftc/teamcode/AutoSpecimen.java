@@ -36,7 +36,7 @@ public class AutoSpecimen extends LinearOpMode{
                 .waitSeconds(0.5)
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(0,arm.armPerp())
-                .strafeToConstantHeading(new Vector2d(0, -37.5))
+                .strafeToConstantHeading(new Vector2d(0, -37))
                 .afterTime(0,linslide.lsOut())
                 .waitSeconds(1)
 
@@ -54,13 +54,13 @@ public class AutoSpecimen extends LinearOpMode{
                 //SPECI 2
                 .afterTime(0,arm.armPerp())
                 .afterTime(0, wrist.wristSpecimen())
-                .strafeToLinearHeading(new Vector2d(1, -37.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(7, -37.5), Math.toRadians(270))
                 .afterTime(0,linslide.lsOut())
                 .waitSeconds(1)
                 .afterTime(0, claw.clawOpen())
                 .waitSeconds(1)
 
-                .afterTime(0, arm.armPar())
+               /* .afterTime(0, arm.armPar())
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(3, wrist.wristIntake())
                 //SPECI 3 PICKUP
@@ -75,11 +75,11 @@ public class AutoSpecimen extends LinearOpMode{
                 .afterTime(0,linslide.lsIn())
                 .afterTime(0, wrist.wristSpecimen())
                 .afterTime(0, arm.armPerp())
-                .strafeToLinearHeading(new Vector2d(7, -37.5),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(14, -37.5),Math.toRadians(-90))
                 .afterTime(0, linslide.lsCollect())
                 .waitSeconds(1)
                 .afterTime(1, claw.clawOpen())
-                .waitSeconds(1)
+                */.waitSeconds(1)
                 //PARK
                 .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(270))
                         .waitSeconds(30);
