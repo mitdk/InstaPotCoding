@@ -18,7 +18,7 @@ public class Claw {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            claw.setPosition(0.05);
+            claw.setPosition(0);
             return false;
         }
     }

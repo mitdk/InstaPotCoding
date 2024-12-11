@@ -109,7 +109,7 @@ public class LinSlide {
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
             if (linSlide.getCurrentPosition()<4000) {
-                linSlide.setTargetPosition(1200);
+                linSlide.setTargetPosition(1000);
 
                 linSlide.setVelocity(2000);
 

@@ -63,8 +63,8 @@ public class Arm {
             packet.put("armPos2", armpos2);
 
             if (armpos1 < 3000 || armpos2 < 3000) {
-                Arm_1.setTargetPosition(1400);
-                Arm_2.setTargetPosition(1400);
+                Arm_1.setTargetPosition(1450);
+                Arm_2.setTargetPosition(1450);
                 Arm_1.setVelocity(2000);
                 Arm_2.setVelocity(2000);
                 Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
