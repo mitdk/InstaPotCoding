@@ -155,7 +155,7 @@ public class TeleOpMode extends LinearOpMode {
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             } else if (gamepad2.dpad_right) {
-                armPosition = 850;
+                armPosition = 630;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);

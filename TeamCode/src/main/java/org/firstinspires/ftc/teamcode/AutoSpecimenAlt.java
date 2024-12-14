@@ -39,9 +39,10 @@ public class AutoSpecimenAlt extends LinearOpMode{
                 .afterTime(0, claw.clawOpen())
                 .afterTime(0, arm.armPar())
                 //SPECIS 2 AND 3 PICKUP
-                .splineToConstantHeading(new Vector2d(57.4, -8.5),Math.toRadians(0))
+                .lineToY((-20))
+                .splineToConstantHeading(new Vector2d(48.4, -10.5),Math.toRadians(180))
                 .strafeTo(new Vector2d(47.4, -48.5))
-                .splineToConstantHeading(new Vector2d(55, -8.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(51, -8.5), Math.toRadians(0))
                 .strafeTo(new Vector2d(55, -48.5))
                 //SPECI 2
                 .strafeToConstantHeading(new Vector2d(47, -38.5))

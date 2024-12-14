@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 // RR-specific imports
-
 // Non-RR imports
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -46,6 +45,12 @@ public class AutoSpecimen extends LinearOpMode{
                 .afterTime(0, linslide.lsSpeciCollect())
                 .waitSeconds(1)
                 .afterTime(0, wrist.wristIntake())
+                //SPECIS 2 AND 3 PICKUP
+                .lineToY((-20))
+                .splineToConstantHeading(new Vector2d(48.4, -10.5),Math.toRadians(180))
+                .strafeTo(new Vector2d(47.4, -48.5))
+                .splineToConstantHeading(new Vector2d(51, -8.5), Math.toRadians(180))
+                .strafeTo(new Vector2d(55, -48.5))
                 //SPECI 2 PICKUP
                 .strafeToLinearHeading(new Vector2d(40, -59.8), Math.toRadians(0))
                 .afterTime(0,claw.clawClose())
@@ -54,13 +59,13 @@ public class AutoSpecimen extends LinearOpMode{
                 //SPECI 2
                 .afterTime(0,arm.armPerp())
                 .afterTime(0, wrist.wristSpecimen())
-                .strafeToLinearHeading(new Vector2d(7, -37.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(7, -37), Math.toRadians(270))
                 .afterTime(0,linslide.lsOut())
                 .waitSeconds(1)
                 .afterTime(0, claw.clawOpen())
                 .waitSeconds(1)
 
-               /* .afterTime(0, arm.armPar())
+                .afterTime(0, arm.armPar())
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(3, wrist.wristIntake())
                 //SPECI 3 PICKUP
@@ -79,8 +84,9 @@ public class AutoSpecimen extends LinearOpMode{
                 .afterTime(0, linslide.lsCollect())
                 .waitSeconds(1)
                 .afterTime(1, claw.clawOpen())
-                */.waitSeconds(1)
+                .waitSeconds(1)
                 //PARK
+                .afterTime(0,linslide.lsIn())
                 .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(270))
                         .waitSeconds(30);
         waitForStart();
