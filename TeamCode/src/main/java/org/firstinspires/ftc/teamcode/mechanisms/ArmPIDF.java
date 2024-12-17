@@ -5,47 +5,53 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 @TeleOp
-public class LinSlidePIDF extends OpMode{
-    public PIDFController controller;
+public class ArmPIDF extends OpMode{
+    private PIDFController controller;
 
-    public static double p = 0.01, i = 0, d = 0.0002;
+    public static double p = 0.003, i = 0.001, d = 0.0001;
 
-    public static double f = 0.00001;
+    public static double f = 0.0001;
 
 
     public static int target = 0;
 
-    public final double TICKS_PER_DEGREE = 537.7 /360;
+    private final double TICKS_PER_DEGREE = 5281.1/360;
 
-    private DcMotorEx linSlide;
+    private DcMotorEx arm1, arm2;
 
 
     @Override
     public void init() {
-        linSlide = hardwareMap.get(DcMotorEx.class, "armLinSlide");
+        arm1 = hardwareMap.get(DcMotorEx.class, "arm1");
+        arm2 = hardwareMap.get(DcMotorEx.class, "arm2");
+
 
         controller = new PIDFController(p,i,d,f);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
 
     }
 
     @Override
     public void loop() {
         controller.setPIDF(p, i, d, f);
-
-
-        int linSlidePos = -linSlide.getCurrentPosition();
-        double pidf = controller.calculate(linSlidePos, target);
-
+        int arm1Pos = -arm1.getCurrentPosition();
+        int arm2Pos = -arm2.getCurrentPosition();
+        double pidf = controller.calculate(arm1Pos, target);
+        double pidf2 = controller.calculate(arm2Pos, target);
         double power1 = -pidf;
+        double power2 = -pidf2;
+        arm1.setPower(power1);
+          arm2.setPower(power1);
 
-        linSlide.setPower(power1);
-
-        telemetry.addData("pos1 ", linSlidePos);
+        telemetry.addData("pos1", arm1Pos);
+        telemetry.addData("pos2", arm2Pos);
         telemetry.addData("target ", target);
         telemetry.update();
     }

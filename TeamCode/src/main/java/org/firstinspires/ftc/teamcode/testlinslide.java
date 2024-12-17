@@ -68,27 +68,6 @@ public class testlinslide extends LinearOpMode {
                 armLinSlide.setPower(-0.5);
                 }
             }
-
-
-
-
-
-
-         //   double extend = gamepad2.right_stick_y;
-           // armLinSlide.setPower(extend);
-
-
-
-            //OUTTAKE LINEAR SLIDE
-            /*if (gamepad2.left_trigger > 0) {
-                linSlidePosition = LIN_SLIDE_OFF;
-
-            } else if (gamepad2.right_trigger > 0) {
-                linSlidePosition = LIN_SLIDE_ON;
-            }
-            armLinSlide.setPower(1);
-            armLinSlide.setTargetPosition((int) linSlidePosition);
-            armLinSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);*/
         }}
 
 

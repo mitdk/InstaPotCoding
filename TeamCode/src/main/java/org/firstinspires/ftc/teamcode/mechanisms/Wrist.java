@@ -38,7 +38,7 @@ public class Wrist {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            wrist.setPosition(0.7);
+            wrist.setPosition(0.525);
             return false;
         }
     }

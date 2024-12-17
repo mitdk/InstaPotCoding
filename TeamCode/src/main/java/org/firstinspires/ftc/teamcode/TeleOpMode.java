@@ -2,22 +2,29 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.arcrobotics.ftclib.controller.PController;
-import com.sun.tools.javac.tree.DCTree;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.mechanisms.LinSlide;
 
 @TeleOp
 public class TeleOpMode extends LinearOpMode {
+    //PID CONTROLLER
+    private PIDFController controller;
+
+    public static double p = 0.003, i = 0.001, d = 0.0001;
+
+    public static double f = 0.0001;
+
+
+    public static int target = 0;
+
+    private final double TICKS_PER_DEGREE = 5281.1 / 360;
 
 
     @Override
@@ -25,6 +32,8 @@ public class TeleOpMode extends LinearOpMode {
         // Declare our motors
         // Make sure your ID's match your configuration
 
+        controller = new PIDFController(p, i, d, f);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftfront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("rightfront");
@@ -32,16 +41,18 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightback");
         Servo claw = hardwareMap.servo.get("claw");
         Servo wrist = hardwareMap.servo.get("wrist");
-        DcMotor armLinSlide = hardwareMap.dcMotor.get("armLinSlide");
+        DcMotor linSlide = hardwareMap.dcMotor.get("armLinSlide");
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
 
         final double INTAKE_DEPOSIT = 0.2;
         final double INTAKE_COLLECT = 0.05;
         final double WRIST_PICKUP = 0;
-        final double WRIST_SPECIMEN = 0.7;
-        final double WRIST_FLATOUT = 0.175;
-        double armPosition = 0; //a
+        final double WRIST_COLLECTSPECI = 0.525;
+        final double WRIST_SPECIMEN = 0.65;
+        final double WRIST_FLATOUT = 0.125;
+        double armPosition = 0;
+        //a
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -49,16 +60,19 @@ public class TeleOpMode extends LinearOpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armLinSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
         arm1.setDirection(DcMotorSimple.Direction.REVERSE);
         arm2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        armLinSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        linSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
+        linSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linSlide.setTargetPosition(0);
+        linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm1.setTargetPosition(0);
@@ -66,6 +80,7 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm2.setTargetPosition(0);
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         claw.setPosition(INTAKE_DEPOSIT);
         wrist.setPosition(WRIST_PICKUP);
@@ -79,6 +94,8 @@ public class TeleOpMode extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+
+
             //DRIVETRAIN
             double y = -gamepad1.left_stick_y;
             double x = -gamepad1.right_stick_x;
@@ -94,27 +111,24 @@ public class TeleOpMode extends LinearOpMode {
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
+            //LINEAR SLIDE
 
 
-            armLinSlide.setTargetPosition(0);
-            armLinSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armLinSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-            telemetry.addData("Position:", armLinSlide.getCurrentPosition());
+            telemetry.addData("Position:", linSlide.getCurrentPosition());
             telemetry.update();
-            if ((arm1.getCurrentPosition() & arm2.getCurrentPosition()) < 400) {
-                if (armLinSlide.getCurrentPosition() <= 2150) {
+
+            if (gamepad2.right_stick_y !=0) {
+                linSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if (linSlide.getCurrentPosition() <= 3900) {
                     double extend = -gamepad2.right_stick_y;
-                    armLinSlide.setPower(extend);
-                } else if (armLinSlide.getCurrentPosition() > 2150) {
-                    armLinSlide.setPower(-0.5);
+                    linSlide.setPower(extend);
+                } else if (linSlide.getCurrentPosition() > 3900) {
+                    linSlide.setPower(-0.5);
                 }
-            } else {
-                double extend = -gamepad2.right_stick_y;
-                armLinSlide.setPower(extend);
             }
 
+//************************************************************************************************************************************************************
 
             //CLAW
             if (gamepad2.left_bumper) {
@@ -131,11 +145,19 @@ public class TeleOpMode extends LinearOpMode {
                 wrist.setPosition(WRIST_PICKUP);
             } else if (gamepad2.b) {
                 wrist.setPosition(WRIST_FLATOUT);
+                ;
+            } else if (gamepad2.x) {
+
             }
 
             //ARM
             if (gamepad2.dpad_down) {
                 //RESET AND INTAKE
+                claw.setPosition(0.2);
+                wrist.setPosition(0.35);
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(0);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armPosition = 0;
                 ((DcMotorEx) arm1).setVelocity(1450);
                 ((DcMotorEx) arm2).setVelocity(1450);
@@ -146,7 +168,7 @@ public class TeleOpMode extends LinearOpMode {
 
             } else if (gamepad2.dpad_up) {
                 //OUTTAKE PERPENDICULAR
-                armPosition = 1450;
+                armPosition = 1600;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);
@@ -155,23 +177,19 @@ public class TeleOpMode extends LinearOpMode {
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             } else if (gamepad2.dpad_right) {
-                armPosition = 630;
+                armPosition = 560;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);
                 arm2.setTargetPosition((int) armPosition);
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wrist.setPosition(WRIST_FLATOUT);
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(1350);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             }
-
-
-            /*
-
-             */
-            //PID STUFF
-            //telemetry.addData("armTarget: ", arm.getTargetPosition());
-            //telemetry.addData("arm Encoder: ", arm.getCurrentPosition());
-            //telemetry.update();
         }
-
-    }}
+    }
+}

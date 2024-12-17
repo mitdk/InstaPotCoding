@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Wrist;
 public class AutoSpecimenAlt extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(11.8, -61.7, Math.toRadians(270));
+        Pose2d initialPose = new Pose2d(11.8, -61.7, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Arm arm = new Arm(hardwareMap);
         LinSlide linslide = new LinSlide(hardwareMap);
@@ -31,10 +31,13 @@ public class AutoSpecimenAlt extends LinearOpMode{
 
 
         TrajectoryActionBuilder Specimen = drive.actionBuilder(initialPose)
-                .afterTime(0,arm.armPerp())
-                .afterTime(0,wrist.wristSpecimen())
-                .strafeToConstantHeading(new Vector2d(0, -33))
-                .afterTime(0,linslide.lsCollect())
+                .afterTime(0,claw.clawClose())
+                .afterTime(0,arm.armAscent())
+                .afterTime(0,wrist.wristFlatout())
+                .afterTime(0, linslide.lsCollect())
+                .strafeToConstantHeading(new Vector2d(0, -29))
+
+                /*.afterTime(0,linslide.lsCollect())
                 .waitSeconds(2)
                 .afterTime(0, claw.clawOpen())
                 .afterTime(0, arm.armPar())
@@ -89,7 +92,7 @@ public class AutoSpecimenAlt extends LinearOpMode{
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(3, wrist.wristIntake())
                 //PARK
-                .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(56, -60.5), Math.toRadians(270)) */
                 .waitSeconds(30);
         waitForStart();
         if(isStopRequested()) return;

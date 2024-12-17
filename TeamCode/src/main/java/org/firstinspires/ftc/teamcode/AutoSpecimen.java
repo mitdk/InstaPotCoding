@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.LinSlide;
 import org.firstinspires.ftc.teamcode.mechanisms.Wrist;
 
 
+
 @Autonomous(name = "AutoSpecimen")
 
 public class AutoSpecimen extends LinearOpMode{
@@ -35,7 +36,7 @@ public class AutoSpecimen extends LinearOpMode{
                 .waitSeconds(0.5)
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(0,arm.armPerp())
-                .strafeToConstantHeading(new Vector2d(0, -37))
+                .strafeToConstantHeading(new Vector2d(0, -38.5))
                 .afterTime(0,linslide.lsOut())
                 .waitSeconds(1)
 
