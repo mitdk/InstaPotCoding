@@ -23,7 +23,7 @@ public class Claw {
         }
     }
 
-    public Action clawOpen() {
+    public Action clawClose() {
         return new ClawOpen();
     }
 
@@ -36,7 +36,7 @@ public class Claw {
         }
     }
 
-    public Action clawClose() {
+    public Action clawOpen() {
         return new ClawClose();
     }
 }
