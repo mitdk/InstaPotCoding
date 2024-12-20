@@ -44,14 +44,14 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor linSlide = hardwareMap.dcMotor.get("armLinSlide");
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
-
+        double armPosition = 0;
         final double INTAKE_DEPOSIT = 0.2;
         final double INTAKE_COLLECT = 0.05;
-        final double WRIST_PICKUP = 0;
-        final double WRIST_COLLECTSPECI = 0.525;
-        final double WRIST_SPECIMEN = 0.65;
-        final double WRIST_FLATOUT = 0.125;
-        double armPosition = 0;
+        final double WRIST_PICKUP = 0.015;
+        final double WRIST_SPECIMEN = 0.26;
+        final double WRIST_SPECICOLLECT = 0.2;
+        final double WRIST_FLATOUT = 0.05;
+        final double WRIST_SPECIMEN_RAM = (((90/1320)*armPosition) * (0.26/180) + 0.015);
         //a
         // Brake code
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,7 +61,6 @@ public class TeleOpMode extends LinearOpMode {
         arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         arm1.setDirection(DcMotorSimple.Direction.REVERSE);
         arm2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -83,7 +82,7 @@ public class TeleOpMode extends LinearOpMode {
 
 
         claw.setPosition(INTAKE_DEPOSIT);
-        wrist.setPosition(WRIST_PICKUP);
+        wrist.setPosition(0);
 
 
         telemetry.addLine("Robot Ready.");
@@ -112,12 +111,6 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             //LINEAR SLIDE
-
-
-
-            telemetry.addData("Position:", linSlide.getCurrentPosition());
-            telemetry.update();
-
             if (gamepad2.right_stick_y !=0) {
                 linSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 if (linSlide.getCurrentPosition() <= 3900) {
@@ -138,29 +131,27 @@ public class TeleOpMode extends LinearOpMode {
                 claw.setPosition(INTAKE_COLLECT);
             }
 
-
+            //WRIST
             if (gamepad2.a) {
                 wrist.setPosition(WRIST_SPECIMEN);
             } else if (gamepad2.y) {
                 wrist.setPosition(WRIST_PICKUP);
             } else if (gamepad2.b) {
                 wrist.setPosition(WRIST_FLATOUT);
-                ;
             } else if (gamepad2.x) {
-
+                wrist.setPosition(WRIST_SPECICOLLECT);
             }
-
+            telemetry.addData("ArmPos1", arm1.getCurrentPosition());
+            telemetry.addData("ArmPos2", arm2.getCurrentPosition());
+            telemetry.update();
             //ARM
+
             if (gamepad2.dpad_down) {
-                //RESET AND INTAKE
-                claw.setPosition(0.2);
-                wrist.setPosition(0.35);
-                linSlide.setPower(1);
-                linSlide.setTargetPosition(0);
-                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //INTAKE PARALLEL
+
                 armPosition = 0;
-                ((DcMotorEx) arm1).setVelocity(1450);
-                ((DcMotorEx) arm2).setVelocity(1450);
+                ((DcMotorEx) arm1).setVelocity(1500);
+                ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);
                 arm2.setTargetPosition((int) armPosition);
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -168,16 +159,22 @@ public class TeleOpMode extends LinearOpMode {
 
             } else if (gamepad2.dpad_up) {
                 //OUTTAKE PERPENDICULAR
-                armPosition = 1600;
+                armPosition = 1320;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);
                 arm2.setTargetPosition((int) armPosition);
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(3120);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wrist.setPosition(WRIST_FLATOUT);
+
 
             } else if (gamepad2.dpad_right) {
-                armPosition = 560;
+                //SPECIMEN OUTTAKE
+                armPosition = 610;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
                 arm1.setTargetPosition((int) armPosition);
@@ -185,10 +182,26 @@ public class TeleOpMode extends LinearOpMode {
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wrist.setPosition(WRIST_FLATOUT);
-                linSlide.setPower(1);
+            /*    linSlide.setPower(1);
                 linSlide.setTargetPosition(1350);
-                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);*/
 
+            } else if (gamepad2.dpad_left) {
+                //RESET AND INTAKE
+                claw.setPosition(0.2);
+                wrist.setPosition(0.13);
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(0);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armPosition = 0;
+                sleep(750);
+                ((DcMotorEx) arm1).setVelocity(1450);
+                ((DcMotorEx) arm2).setVelocity(1450);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wrist.setPosition(WRIST_PICKUP);
             }
         }
     }

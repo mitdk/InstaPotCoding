@@ -117,8 +117,8 @@ public class Arm {
             double armpos1 = Arm_1.getCurrentPosition();
             double armpos2 = Arm_2.getCurrentPosition();
             if(armpos1<1000 || armpos2<1000){
-                Arm_1.setTargetPosition(500);
-                Arm_2.setTargetPosition(500);
+                Arm_1.setTargetPosition(600);
+                Arm_2.setTargetPosition(610);
                 Arm_1.setVelocity(1250);
                 Arm_2.setVelocity(1250);
                 Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);

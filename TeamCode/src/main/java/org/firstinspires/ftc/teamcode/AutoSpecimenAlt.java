@@ -34,9 +34,9 @@ public class AutoSpecimenAlt extends LinearOpMode{
                 .afterTime(0,claw.clawClose())
                 .afterTime(0,arm.armAscent())
                 .afterTime(0,wrist.wristFlatout())
-                .afterTime(0, linslide.lsCollect())
-                .strafeToConstantHeading(new Vector2d(0, -29))
 
+                .strafeToConstantHeading(new Vector2d(0, -29))
+                .stopAndAdd(linslide.lsCollect())
                 /*.afterTime(0,linslide.lsCollect())
                 .waitSeconds(2)
                 .afterTime(0, claw.clawOpen())
