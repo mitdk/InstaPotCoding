@@ -32,7 +32,7 @@ public class AutoSpecimen extends LinearOpMode{
 
         TrajectoryActionBuilder Specimen = drive.actionBuilder(initialPose)
                 .afterTime(0, claw.clawClose())
-                .afterTime(0, wrist.wristSpecimen())
+                .afterTime(0, wrist.wristIntake())
                 .waitSeconds(0.5)
                 .afterTime(0, linslide.lsSpeciCollect())
                 .afterTime(0,arm.armPerp())

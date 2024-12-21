@@ -97,8 +97,8 @@ public class Arm {
             if (armpos1 > 0 || armpos2 > 0) {
                 Arm_1.setTargetPosition(0);
                 Arm_2.setTargetPosition(0);
-                Arm_1.setVelocity(500);
-                Arm_2.setVelocity(500);
+                Arm_1.setVelocity(1500);
+                Arm_2.setVelocity(1500);
                 Arm_1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 Arm_2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return false;

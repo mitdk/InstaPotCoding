@@ -45,7 +45,7 @@ public class LinSlide {
             // powers on motor, if it is not on
             if (linSlide.getCurrentPosition() < 3120) {
                 linSlide.setVelocity(2000);
-                linSlide.setTargetPosition(3120);
+                linSlide.setTargetPosition(1425);
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 return false;
@@ -109,7 +109,7 @@ public class LinSlide {
         public boolean run(@NonNull TelemetryPacket packet) {
             // powers on motor, if it is not on
             if (linSlide.getCurrentPosition()<4000) {
-                linSlide.setTargetPosition(270);
+                linSlide.setTargetPosition(820);
 
                 linSlide.setVelocity(4000);
 

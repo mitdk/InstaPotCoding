@@ -18,8 +18,10 @@ public class MeepMeepRedRed {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(50, 50, Math.toRadians(180), Math.toRadians(90), 15)
 
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder( new Pose2d(11.8, -61.7, Math.toRadians(90)))
-                        .splineToConstantHeading(new Vector2d(38.4, 5), Math.toRadians(0))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder( new Pose2d(11.8, -61.7, Math.toRadians(270)))
+                        .strafeTo(new Vector2d(0, -38.4))
+                        .waitSeconds(1)
+                        .splineToConstantHeading(new Vector2d(41.4, -10), Math.toRadians(180))
                         
 
 

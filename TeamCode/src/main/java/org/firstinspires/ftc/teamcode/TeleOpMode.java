@@ -45,7 +45,7 @@ public class TeleOpMode extends LinearOpMode {
         DcMotor arm1 = hardwareMap.dcMotor.get("arm1");
         DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
         double armPosition = 0;
-        final double INTAKE_DEPOSIT = 0.2;
+        final double INTAKE_DEPOSIT = 0.23;
         final double INTAKE_COLLECT = 0.05;
         final double WRIST_PICKUP = 0.015;
         final double WRIST_SPECIMEN = 0.26;
@@ -111,12 +111,12 @@ public class TeleOpMode extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             //LINEAR SLIDE
-            if (gamepad2.right_stick_y !=0) {
+            if (gamepad2.right_stick_y !=0 ) {
                 linSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                if (linSlide.getCurrentPosition() <= 3900) {
+                if (linSlide.getCurrentPosition() <= 2500 ) {
                     double extend = -gamepad2.right_stick_y;
                     linSlide.setPower(extend);
-                } else if (linSlide.getCurrentPosition() > 3900) {
+                } else if (linSlide.getCurrentPosition() > 2500 && arm1.getCurrentPosition() < 500)  {
                     linSlide.setPower(-0.5);
                 }
             }
@@ -146,9 +146,21 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.update();
             //ARM
 
-            if (gamepad2.dpad_down) {
+            if (gamepad2.dpad_up) {
                 //INTAKE PARALLEL
+                wrist.setPosition(WRIST_PICKUP);
+                armPosition = 1320;
+                ((DcMotorEx) arm1).setVelocity(1500);
+                ((DcMotorEx) arm2).setVelocity(1500);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            } else if (gamepad2.dpad_down) {
+                //OUTTAKE PERPENDICULAR
+                claw.setPosition(INTAKE_COLLECT);
+                wrist.setPosition(0.09);
                 armPosition = 0;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
@@ -157,8 +169,12 @@ public class TeleOpMode extends LinearOpMode {
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            } else if (gamepad2.dpad_up) {
-                //OUTTAKE PERPENDICULAR
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(580);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                sleep(1000);
+                claw.setPosition(INTAKE_DEPOSIT);
+                sleep(1000);
                 armPosition = 1320;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
@@ -167,9 +183,9 @@ public class TeleOpMode extends LinearOpMode {
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linSlide.setPower(1);
-                linSlide.setTargetPosition(3120);
+                linSlide.setTargetPosition(820);
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                wrist.setPosition(WRIST_FLATOUT);
+                wrist.setPosition(WRIST_PICKUP);
 
 
             } else if (gamepad2.dpad_right) {
