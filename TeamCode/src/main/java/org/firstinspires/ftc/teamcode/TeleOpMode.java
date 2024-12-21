@@ -47,7 +47,7 @@ public class TeleOpMode extends LinearOpMode {
         double armPosition = 0;
         final double INTAKE_DEPOSIT = 0.23;
         final double INTAKE_COLLECT = 0.05;
-        final double WRIST_PICKUP = 0.015;
+        final double WRIST_PICKUP = 0.03;
         final double WRIST_SPECIMEN = 0.26;
         final double WRIST_SPECICOLLECT = 0.2;
         final double WRIST_FLATOUT = 0.05;
@@ -81,8 +81,7 @@ public class TeleOpMode extends LinearOpMode {
         arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        claw.setPosition(INTAKE_DEPOSIT);
-        wrist.setPosition(0);
+
 
 
         telemetry.addLine("Robot Ready.");
@@ -113,10 +112,10 @@ public class TeleOpMode extends LinearOpMode {
             //LINEAR SLIDE
             if (gamepad2.right_stick_y !=0 ) {
                 linSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                if (linSlide.getCurrentPosition() <= 2500 ) {
+                if (linSlide.getCurrentPosition() <= 2000 ) {
                     double extend = -gamepad2.right_stick_y;
                     linSlide.setPower(extend);
-                } else if (linSlide.getCurrentPosition() > 2500 && arm1.getCurrentPosition() < 500)  {
+                } else if (linSlide.getCurrentPosition() > 2000 && arm1.getCurrentPosition() < 500)  {
                     linSlide.setPower(-0.5);
                 }
             }
@@ -130,7 +129,27 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.right_bumper) {
                 claw.setPosition(INTAKE_COLLECT);
             }
+            //specideposit
+            if (gamepad1.dpad_up) {
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(900);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                claw.setPosition(INTAKE_COLLECT);
+                wrist.setPosition(0.015);
+                linSlide.setPower(1);
+                linSlide.setTargetPosition(0);
+                linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armPosition = 0;
+                sleep(250);
+                ((DcMotorEx) arm1).setVelocity(1450);
+                ((DcMotorEx) arm2).setVelocity(1450);
+                arm1.setTargetPosition((int) armPosition);
+                arm2.setTargetPosition((int) armPosition);
+                arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wrist.setPosition(WRIST_PICKUP);
 
+            }
             //WRIST
             if (gamepad2.a) {
                 wrist.setPosition(WRIST_SPECIMEN);
@@ -139,7 +158,7 @@ public class TeleOpMode extends LinearOpMode {
             } else if (gamepad2.b) {
                 wrist.setPosition(WRIST_FLATOUT);
             } else if (gamepad2.x) {
-                wrist.setPosition(WRIST_SPECICOLLECT);
+                wrist.setPosition(0.11);
             }
             telemetry.addData("ArmPos1", arm1.getCurrentPosition());
             telemetry.addData("ArmPos2", arm2.getCurrentPosition());
@@ -170,11 +189,11 @@ public class TeleOpMode extends LinearOpMode {
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 linSlide.setPower(1);
-                linSlide.setTargetPosition(580);
+                linSlide.setTargetPosition(590);
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1000);
+                sleep(500);
                 claw.setPosition(INTAKE_DEPOSIT);
-                sleep(1000);
+                sleep(250);
                 armPosition = 1320;
                 ((DcMotorEx) arm1).setVelocity(1500);
                 ((DcMotorEx) arm2).setVelocity(1500);
@@ -183,7 +202,7 @@ public class TeleOpMode extends LinearOpMode {
                 arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linSlide.setPower(1);
-                linSlide.setTargetPosition(820);
+                linSlide.setTargetPosition(770);
                 linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wrist.setPosition(WRIST_PICKUP);
 
